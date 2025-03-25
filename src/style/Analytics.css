@@ -1,0 +1,193 @@
+/* Overall container styling */
+.analytics-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease-in-out;
+    margin-left: 250px;
+}
+
+/* Header styling */
+h2 {
+    color: #2a2a2a;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* Chart wrapper styling */
+.chart-wrapper {
+    margin-bottom: 40px;
+    height: 300px; /* Set a height for the chart */
+}
+
+/* Progress section styling */
+.progress-section {
+    margin-bottom: 40px;
+}
+
+.progress-cards {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Individual progress card styling */
+.progress-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    margin: 0 10px;
+    padding: 20px;
+    transition: transform 0.3s ease;
+}
+
+.progress-card:hover {
+    transform: translateY(-5px);
+}
+
+.progress-bar {
+    height: 10px;
+    background-color: #0073e6;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+/* Statistics section styling */
+.statistics-section {
+    margin-top: 20px;
+}
+
+.stats-cards {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Individual stats card styling */
+.stats-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    margin: 0 10px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.stats-card h4 {
+    font-size: 1.5rem;
+    color: #0073e6;
+}
+
+.stats-card p {
+    font-size: 1.25rem;
+    color: #333;
+}
+
+/* Modal styling */
+/* Modal styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #01284f, #00c6ff);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease-in-out;
+    padding: 90px;
+    position: relative; /* Added for positioning the close button */
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 1.8rem;
+    color: #ffffff;
+}
+
+.modal-close {
+    cursor: pointer;
+    font-size: 28px;
+    color: #ffffff;
+    background: transparent;
+    border: none;
+    transition: transform 0.3s ease;
+}
+
+.modal-close:hover {
+    transform: scale(1.1);
+}
+
+/* Modal body styling */
+.modal-body {
+    margin-top: 15px;
+    color: #f1f1f1;
+}
+
+.modal-body p {
+    font-size: 1rem;
+    margin: 10px 0;
+    color: aqua;
+}
+
+/* Button styling */
+.modal-button {
+    background: #ffffff;
+    color: #0073e6;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.modal-button:hover {
+    background: #0073e6;
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+/* Keyframe animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}

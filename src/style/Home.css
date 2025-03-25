@@ -1,0 +1,307 @@
+/* Ensure the home page background is white */
+body {
+    background-color: #fff; /* White background for the entire page */
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Ensure the main content area is correctly positioned */
+.home-container {
+    margin-left: 250px; /* Adjust based on sidebar width */
+    width: calc(100% - 250px); /* Adjust width to accommodate sidebar */
+    box-sizing: border-box;
+    background-color: #ffffff; /* White background for the home page */
+}
+
+/* Header styles */
+.header {
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+    justify-content: flex-end; /* Align items to the right */
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 1rem;
+    width: 100%; /* Full width to match container */
+    background-color: #fff; /* Match the background color */
+    padding: 1rem; /* Add padding for spacing */
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+}
+
+.profile-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    border: 2px solid #8E44AD; /* Optional: Add a border to profile image */
+}
+
+.profile-info h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.profile-info p {
+    margin: 0;
+    color: #666;
+}
+
+.sep {
+    margin-top: 50px;
+}
+
+.main-content {
+    width: 100%;
+    text-align: center; /* Center the content */
+}
+
+/* New card button */
+.new-card-btn {
+    background-color: #8E44AD;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem; /* Add spacing above the button */
+    margin-bottom: 50px;
+}
+
+.new-card-btn:hover {
+    background-color: #9B59B6;
+}
+
+/* Styles for the "Show Saved Cards" button */
+.show-cards-option {
+    margin-bottom: 1rem;
+}
+
+.show-cards-option button {
+    background-color: #3498DB; /* Adjust color as needed */
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+.search-sorting {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  max-width: 750px;
+  margin-left: 40px;
+  margin-top: 30px;
+}
+
+.search-input {
+  width: 100px; /* Set width for search input */
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.sort-button {
+  padding: 5px 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.sort-button:hover {
+  background-color: #0056b3;
+}
+
+
+.new-card-btn1 {
+    padding: 5px 10px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100px;
+    margin-bottom: 10px;
+  }
+  
+  .new-card-btn:hover {
+    background-color: #218838;
+  }
+
+
+.show-cards-option button:hover {
+    background-color: #2980B9; /* Darker shade for hover */
+}
+
+/* Cards container to center cards and ensure spacing */
+.cards-container {
+    display: flex;
+    justify-content: center; /* Center the cards horizontally */
+    gap: 4.5rem;
+    flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
+    padding: 10px ;
+    margin: 10px 10px 10px 0px;
+}
+
+/* Card styles */
+.card {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 200px; /* Fixed width for consistent card sizes */
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column; /* Ensure content is stacked vertically */
+    justify-content: space-between; /* Space out content evenly */
+    position: relative; /* For loader effect positioning */
+}
+
+/* Card hover effect */
+.card:hover {
+    transform: translateY(-10px);
+}
+
+/* Card header styles */
+.card-header {
+    position: relative; /* Position relative to enable absolute positioning for the pseudo-element */
+    height: 200px;
+    border-radius: 16px 16px 800px 0; /* Curved shape with a diagonal cut */
+    margin-bottom: 1rem;
+    overflow: hidden; /* Ensure the strip does not overflow outside the card header */
+    background-color: #3498DB; /* Example background color */
+}
+
+/* Use a pseudo-element to create the flowing strip */
+.card-header::before {
+    content: '';
+    position: absolute;
+    top: -100%; /* Start above the card header */
+    left: -100%; /* Start off the left side of the card header */
+    width: 300%; /* Make the strip wide enough to cover the card header */
+    height: 300%; /* Make the strip tall enough to cover the card header */
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)); /* Gradient effect for the strip */
+    border-radius: 50%; /* Curved edges for the strip */
+    transform: rotate(30deg); /* Rotate the strip for a diagonal effect */
+    animation: flow-animation 4s linear infinite; /* Apply the flow animation */
+}
+
+/* Keyframes for flowing strip animation */
+@keyframes flow-animation {
+    0% {
+        transform: translateX(-100%) rotate(30deg); /* Start off the left side */
+    }
+    100% {
+        transform: translateX(100%) rotate(30deg); /* End off the right side */
+    }
+}
+
+.personal-header {
+    background-color: #8E44AD;
+}
+
+.work-header {
+    background-color: #3498DB;
+}
+
+.card h2 {
+    margin: 0 0 1rem;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* Loader effect for list items */
+.card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.card ul li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.card ul li .li-content {
+    background-color: #e0e0e0; /* Light gray to mimic a loading placeholder */
+    height: 15px; /* Fixed height for the loader effect */
+    border-radius: 4px;
+    margin-left: 10px; /* Space between icon and text */
+    width: 100%; /* Ensure the placeholder spans the width */
+    animation: pulse 1.5s infinite ease-in-out; /* Add a loading animation */
+    margin: 5px;
+}
+
+.card ul li .li-content1 {
+    background-color: #e0e0e0; /* Light gray to mimic a loading placeholder */
+    height: 10px; /* Fixed height for the loader effect */
+    border-radius: 15px;
+    margin-left: 0px; /* Space between icon and text */
+    width: 100%; /* Ensure the placeholder spans the width */
+    animation: pulse 1.5s infinite ease-in-out; /* Add a loading animation */
+}
+
+.card ul li .li-content2 {
+    background-color: #e0e0e0; /* Light gray to mimic a loading placeholder */
+    height: 10px; /* Fixed height for the loader effect */
+    border-radius: 15px;
+    margin-left: 0px; /* Space between icon and text */
+    width: 100px; /* Ensure the placeholder spans the width */
+    animation: pulse 1.5s infinite ease-in-out; /* Add a loading animation */
+}
+/* Animation for the loader effect */
+@keyframes pulse {
+    0% {
+        background-color: #e0e0e0;
+    }
+    50% {
+        background-color: #f0f0f0;
+    }
+    100% {
+        background-color: #e0e0e0;
+    }
+}
+
+
+/* Card footer styles */
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #ddd;
+    padding-top: 0.5rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #999;
+}
+
+/* Position for card and button alignment */
+.card-container, .show-cards-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+  
+  .custom-icon {
+    margin-right: 10px; /* Creates gap between icon and text */
+    color: #064495; /* Customize the icon color */
+    height: 25px;
+  }
+
+
+  

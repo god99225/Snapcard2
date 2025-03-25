@@ -1,0 +1,174 @@
+/* Backgrounds Page Styles */
+.backgrounds-page {
+  display: flex;
+  height: 100vh;
+  margin-left: 250px;
+  background-color: #f4f4f4;
+}
+
+/* Sidebar */
+.backgrounds-sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
+}
+
+/* Main Content */
+.backgrounds-main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* Cards Section */
+.backgrounds-cards-section {
+  margin-bottom: 30px;
+}
+
+.backgrounds-cards-heading {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.backgrounds-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.backgrounds-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.backgrounds-card:hover, .selected-card {
+  border: 2px solid #007bff;
+  transform: scale(1.05);
+}
+
+.backgrounds-card-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Frames Section */
+.backgrounds-frames {
+  margin-top: 20px;
+}
+
+.backgrounds-frames-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.backgrounds-frame-gallery {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+.backgrounds-frame-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  max-width: 600px;
+}
+
+.backgrounds-frame-item {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 250px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.backgrounds-frame-item:hover, .backgrounds-frame-item.selected {
+  transform: scale(1.05);
+  border: 2px solid #007bff;
+}
+
+.backgrounds-frame-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* Frame Preview */
+.backgrounds-frame-preview-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 900px;
+  height: 300px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.backgrounds-frame-preview {
+  position: relative;
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #ddd;
+  padding: 10px;
+  border-radius: 10px;
+  background: #fff;
+  width: 100%;
+  height: 100%;
+}
+
+.selected-card-preview {
+  position: absolute;
+  top: 1px;
+  left: 30px;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 25px;
+}
+
+.backgrounds-frame-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.backgrounds-frame-description {
+  flex: 1;
+  padding-left: 20px;
+}
+
+.backgrounds-download-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 15px;
+  background: #007bff;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.backgrounds-download-btn:hover {
+  background: #0056b3;
+}

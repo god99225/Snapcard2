@@ -1,0 +1,259 @@
+/* Container for the entire page */
+.email-signatures-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+/* Styling for the main content area */
+.content-wrapper {
+    margin-left: 250px; /* Adjust according to sidebar width */
+    padding: 30px;
+    width: calc(100% - 250px);
+    overflow-y: auto;
+}
+
+/* Page title and introduction text */
+.page-heading {
+    font-size: 2.5rem;
+    color: #2a2a2a;
+    margin-bottom: 15px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.page-intro {
+    font-size: 1.2rem;
+    color: #6b6b6b;
+    margin-bottom: 30px;
+}
+
+/* Grid layout for card previews */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+/* Styling for card previews */
+.card-preview {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 25px;
+    text-align: center;
+    position: relative;
+    border: 1px solid #e0e0e0;
+}
+
+.card-preview:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-name {
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: #2a2a2a;
+    margin: 20px 0;
+}
+
+/* Modal overlay with smooth fade-in effect */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s forwards ease-in-out;
+}
+
+/* Modal content with slide-in animation */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    display: flex;
+    width: 900px;
+    max-width: 95%;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease-in-out;
+    justify-content: space-between;
+}
+
+/* Close icon */
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+    color: #ff5252;
+}
+
+/* Modal left section for card details */
+.modal-left {
+    flex: 1;
+    padding-right: 30px;
+}
+
+.modal-left h2 {
+    margin-bottom: 15px;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.card-details {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.card-details li {
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    color: #c7c7c7;
+}
+
+/* Modal right section for QR code and social media */
+.modal-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.qr-code-container {
+    margin-bottom: 20px;
+}
+
+/* Updated QR code design */
+.qr-code-img {
+    max-width: 180px;
+    border-radius: 15px;
+    border: 4px solid #0073e6;
+    padding: 10px;
+    background: #f0f0f0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Download QR code button */
+.download-qr-button {
+    padding: 12px 25px;
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.download-qr-button svg {
+    margin-right: 8px;
+}
+
+.download-qr-button:hover {
+    background-color: #000808;
+}
+
+/* Social media icons */
+.social-share-icons {
+    display: flex;
+    gap: 20px;
+}
+
+.social-icon {
+    font-size: 28px;
+    color: #ffffff;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icon:hover {
+    color: #8fc7ff;
+    transform: scale(1.2);
+}
+
+/* Total views and total shares box */
+.stats-box {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 150px;
+    margin: 10px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.stats-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.stats-box h3 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #0073e6;
+    margin-bottom: 5px;
+}
+
+.stats-box p {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #555;
+}
+
+/* Adding a smooth modal animation */
+.modal-overlay.active {
+    animation: modalEnter 0.3s ease-out;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .modal-content {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .modal-left,
+    .modal-right {
+        width: 100%;
+        padding: 0;
+        text-align: center;
+    }
+}
