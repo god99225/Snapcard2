@@ -1,50 +1,44 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';  // Ensure firebase.js is correctly configured
 import '../style/Login.css';
 
-function Login() {
+function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    
-    // Basic validation
     if (!email || !password) {
-      setError('Please enter both email and password.');
+      setError('Please enter email and password.');
       return;
     }
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      localStorage.setItem('userToken', user.accessToken); // Store user token
-      localStorage.setItem('userEmail', user.email); // Store email
-      navigate('/home', { state: { email: user.email } });
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert('Account created successfully! Please login.');
+      navigate('/');
     } catch (err) {
-      setError('Invalid email or password. Please try again.');
+      setError(err.message);
     }
   };
 
   return (
     <div className="login-page">
       <div className="login-container">
-        <div className="login-card">
-        <img 
+              <div className="login-card">
+              <img 
             src="/assets/Snapcard logo.png" 
             alt="Snapcard Logo" 
             style={{ width: "250px", height: "auto", display: "block", margin: "0 auto" }} 
           />
-          <h2>Login to your account</h2>
-          <p>Don't have an account? <a href="/register">Register</a></p>
-
+          <h2>Create an account</h2>
+          <p>Already have an account? <a href="/">Login</a></p>
           {error && <p className="error-message">{error}</p>}
-
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleRegister}>
             <div className="input-group">
               <label>Email</label>
               <input
@@ -63,17 +57,12 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-
-            <button type="submit" className="login-btn">Login</button>
+            <button type="submit" className="login-btn">Sign Up</button>
           </form>
-
-          <div className="or-divider">
-            <span>or continue with</span>
-          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default Register;
