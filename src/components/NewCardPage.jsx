@@ -208,19 +208,19 @@ function NewCardPage() {
                 <h3>Choose Frame</h3>
                 <div className="frame-selector">
                   <div className="frame" onClick={() => handleFrameChange('frame1')}>
-                    <img src="src/assets/1.png" alt="Frame 1" className="frame-image" />
+                    <img src="/assets/1.png" alt="Frame 1" className="frame-image" />
                   </div>
                   <div className="frame" onClick={() => handleFrameChange('frame2')}>
-                    <img src="src/assets/1.2.png" alt="Frame 2" className="frame-image" />
+                    <img src="/assets/1.2.png" alt="Frame 2" className="frame-image" />
                   </div>
                   <div className="frame" onClick={() => handleFrameChange('frame3')}>
-                    <img src="src/assets/1.3.png" alt="Frame 3" className="frame-image" />
+                    <img src="/assets/1.3.png" alt="Frame 3" className="frame-image" />
                   </div>
                   <div className="frame" onClick={() => handleFrameChange('frame4')}>
-                    <img src="src/assets/1.4.png" alt="Frame 4" className="frame-image" />
+                    <img src="/assets/1.4.png" alt="Frame 4" className="frame-image" />
                   </div>
                   <div className="frame" onClick={() => handleFrameChange('frame5')}>
-                    <img src="src/assets/1.png" alt="Frame 5" className="frame-image" />
+                    <img src="/assets/1.png" alt="Frame 5" className="frame-image" />
                   </div>
                 </div>
 

@@ -35,7 +35,7 @@ function Login() {
       <div className="login-container">
         <div className="login-card">
           <div className="logo11">
-            <img src="src/assets/ll.png" alt="Logo" />
+            <img src="/assets/ll.png" alt="Logo" />
           </div>
           <h2>Login to your account</h2>
           <p>Don't have an account? <a href="/register">Register</a></p>

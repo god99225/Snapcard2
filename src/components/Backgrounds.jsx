@@ -14,17 +14,17 @@ const Backgrounds = () => {
   }, []);
 
   const frames = [
-    { id: 1, imgSrc: '../src/assets/gallary5.png', title: 'Frame 1', description: 'Elegant design.' },
-    { id: 2, imgSrc: '../src/assets/gallary6.jpg', title: 'Frame 2', description: 'Modern style.' },
-    { id: 3, imgSrc: '../src/assets/gallary1.jpg', title: 'Frame 3', description: 'Professional look.' },
-    { id: 4, imgSrc: '../src/assets/gallary2.jpg', title: 'Frame 4', description: 'Creative touch.' },
-    { id: 5, imgSrc: '../src/assets/gallary3.jpg', title: 'Frame 5', description: 'Classic frame.' },
-    { id: 6, imgSrc: '../src/assets/gallary4.jpg', title: 'Frame 6', description: 'Minimalist design.' },
-    { id: 7, imgSrc: '../src/assets/gallary7.jpg', title: 'Frame 1', description: 'Elegant design.' },
-    { id: 8, imgSrc: '../src/assets/gallary8.jpg', title: 'Frame 2', description: 'Modern style.' },
-    { id: 9, imgSrc: '../src/assets/gallary9.jpg', title: 'Frame 3', description: 'Professional look.' },
-    { id: 10, imgSrc: '../src/assets/gallary10.jpg', title: 'Frame 4', description: 'Creative touch.' },
-    { id: 11, imgSrc: '../src/assets/gallary11.jpg', title: 'Frame 5', description: 'Classic frame.' },
+    { id: 1, imgSrc: '/assets/gallary5.png', title: 'Frame 1', description: 'Elegant design.' },
+    { id: 2, imgSrc: '/assets/gallary6.jpg', title: 'Frame 2', description: 'Modern style.' },
+    { id: 3, imgSrc: '/assets/gallary1.jpg', title: 'Frame 3', description: 'Professional look.' },
+    { id: 4, imgSrc: '/assets/gallary2.jpg', title: 'Frame 4', description: 'Creative touch.' },
+    { id: 5, imgSrc: '/assets/gallary3.jpg', title: 'Frame 5', description: 'Classic frame.' },
+    { id: 6, imgSrc: '/assets/gallary4.jpg', title: 'Frame 6', description: 'Minimalist design.' },
+    { id: 7, imgSrc: '/assets/gallary7.jpg', title: 'Frame 1', description: 'Elegant design.' },
+    { id: 8, imgSrc: '/assets/gallary8.jpg', title: 'Frame 2', description: 'Modern style.' },
+    { id: 9, imgSrc: '/assets/gallary9.jpg', title: 'Frame 3', description: 'Professional look.' },
+    { id: 10, imgSrc: '/assets/gallary10.jpg', title: 'Frame 4', description: 'Creative touch.' },
+    { id: 11, imgSrc: '/assets/gallary11.jpg', title: 'Frame 5', description: 'Classic frame.' },
   ];
 
   const handleFrameSelect = (frame) => {

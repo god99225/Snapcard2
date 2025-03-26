@@ -4,16 +4,16 @@ import '../style/Contacts.css'; // Import the CSS
 
 
 const contactsData = [
-  { name: 'Abhijit Mate', position: 'Software Engineer', email: 'john@example.com', logo: 'src/assets/contact1.png' },
-  { name: 'Pranav', position: 'Product Manager', email: 'jane@example.com', logo: 'src/assets/contact1.png' },
-  { name: 'Ashish Ganwant', position: 'UX Designer', email: 'alice@example.com', logo: 'src/assets/contact1.png' },
-  { name: 'Amruta Patil', position: 'Data Scientist', email: 'bob@example.com', logo: 'src/assets/contact1.png' },
-  { name: 'Umadevi Mathpati', position: 'Digital Marketing', email: 'Uma@example.com', logo: 'src/assets/contact1.png' },
-  { name: 'Mrugnayana Giri', position: 'Sales Excecative', email: 'john@example.com', logo: 'src/assets/contact1.png' },
-  { name: 'Vishal Sonowane', position: 'Product Manager', email: 'jane@example.com', logo: 'src/assets/contact1.png' },
-  { name: 'Pooja Mam', position: 'UX Designer', email: 'alice@example.com', logo: 'src/assets/contact1.png' },
-  { name: 'Anjali Channagire ', position: 'Data Scientist', email: 'bob@example.com', logo: 'src/assets/contact1.png' },
-  { name: 'Yash Garg', position: 'PowerBI', email: 'Uma@example.com', logo: 'src/assets/contact1.png' },
+  { name: 'Abhijit Mate', position: 'Software Engineer', email: 'john@example.com', logo: '/assets/contact1.png' },
+  { name: 'Pranav', position: 'Product Manager', email: 'jane@example.com', logo: '/assets/contact1.png' },
+  { name: 'Ashish Ganwant', position: 'UX Designer', email: 'alice@example.com', logo: '/assets/contact1.png' },
+  { name: 'Amruta Patil', position: 'Data Scientist', email: 'bob@example.com', logo: '/assets/contact1.png' },
+  { name: 'Umadevi Mathpati', position: 'Digital Marketing', email: 'Uma@example.com', logo: '/assets/contact1.png' },
+  { name: 'Mrugnayana Giri', position: 'Sales Excecative', email: 'john@example.com', logo: '/assets/contact1.png' },
+  { name: 'Vishal Sonowane', position: 'Product Manager', email: 'jane@example.com', logo: '/assets/contact1.png' },
+  { name: 'Pooja Mam', position: 'UX Designer', email: 'alice@example.com', logo: '/assets/contact1.png' },
+  { name: 'Anjali Channagire ', position: 'Data Scientist', email: 'bob@example.com', logo: '/assets/contact1.png' },
+  { name: 'Yash Garg', position: 'PowerBI', email: 'Uma@example.com', logo: '/assets/contact1.png' },
 
 
 ];

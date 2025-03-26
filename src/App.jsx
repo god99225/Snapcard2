@@ -11,7 +11,7 @@ import EmailSignatures from './components/EmailSignatures';
 import Analytics from './components/Analytics';
 import Settings from './components/Settings'; // Assuming you create this component
 import ViewCardPage from './components/ViewCardPage';
-import Help from './components/help';
+import Help from './components/Help';
 import Support from './components/Support';
 
 function App() {

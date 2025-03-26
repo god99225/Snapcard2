@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../style/Dashboard.css'; // Ensure this file contains the updated CSS styles
-import emailIcon from '../assets/email-icon.png';
-import optionsIcon from '../assets/options-icon.png';
-import accountIcon from '../assets/account-icon.png';
-import settingsIcon from '../assets/settings-icon.png';
-import logoutIcon from '../assets/logout-icon.png';
+import emailIcon from '/assets/email-icon.png';
+import optionsIcon from '/assets/options-icon.png';
+import accountIcon from '/assets/account-icon.png';
+import settingsIcon from '/assets/settings-icon.png';
+import logoutIcon from '/assets/logout-icon.png';
 
 function Dashboard() {
   const location = useLocation();

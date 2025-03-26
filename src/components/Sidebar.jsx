@@ -12,7 +12,7 @@ function Sidebar() {
   return (
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="logo">
-        <img src="src/assets/Snapcard logo2.png" alt="Logo" /> {/* Replace with the actual logo path */}
+        <img src="/assets/Snapcard logo2.png" alt="Logo" /> {/* Replace with the actual logo path */}
         <button onClick={toggleSidebar} className="toggle-btn">
           {/* <i className="fas fa-bars"></i> */}
         </button>
