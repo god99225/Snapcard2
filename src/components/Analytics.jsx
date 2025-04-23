@@ -9,17 +9,15 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import '../style/Analytics.css'; // Ensure you have this CSS file
+import '../style/Analytics.css'; 
 import Sidebar from './Sidebar';
 
-// Register necessary components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Analytics = () => {
   const chartRef = useRef(null);
-  const [showModal, setShowModal] = useState(true); // State for modal visibility
+  const [showModal, setShowModal] = useState(true);
 
-  // Sample data for the chart
   const data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
@@ -40,7 +38,6 @@ const Analytics = () => {
     ],
   };
 
-  // Options for the chart
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -62,54 +59,51 @@ const Analytics = () => {
 
   useEffect(() => {
     const chartInstance = chartRef.current;
-
     return () => {
-      // Clean up the chart instance on component unmount
       if (chartInstance) {
         chartInstance.destroy();
       }
     };
   }, [chartRef]);
 
-  // Function to close the modal
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
   return (
-    <div>
+    <div className="analytics-page">
       <Sidebar />
       <div className="analytics-container">
         <h2>Analytics Dashboard</h2>
-          {showModal && (
-              <div className="modal">
-                  <div className="modal-content">
-                      <div className="modal-header">
-                          <h2 className="modal-title">Subscription Details</h2>
-                          <button className="modal-close" onClick={handleCloseModal}>
-                              &times;
-                          </button>
-                      </div>
-                      <div className="modal-body">
-                          <p>Plan: Premium</p>
-                          <p>Start Date: January 1, 2024</p>
-                          <p>Renewal Date: January 1, 2025</p>
-                          <p>Features:</p>
-                          <ul>
-                              <li>Unlimited access to all features</li>
-                              <li>Priority customer support</li>
-                              <li>Customizable templates</li>
-                              <li>Analytics dashboard</li>
-                              <li>Regular updates</li>
-                          </ul>
-                          <button className="modal-button" onClick={handleCloseModal}>
-                              Close
-                          </button>
-                      </div>
-                  </div>
-              </div>
-          )}
 
+        {showModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h2 className="modal-title">Subscription Details</h2>
+                <button className="modal-close" onClick={handleCloseModal}>
+                  &times;
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>Plan: Premium</p>
+                <p>Start Date: January 1, 2024</p>
+                <p>Renewal Date: January 1, 2025</p>
+                <p>Features:</p>
+                <ul>
+                  <li>Unlimited access to all features</li>
+                  <li>Priority customer support</li>
+                  <li>Customizable templates</li>
+                  <li>Analytics dashboard</li>
+                  <li>Regular updates</li>
+                </ul>
+                <button className="modal-button" onClick={handleCloseModal}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="chart-wrapper">
           <Bar ref={chartRef} data={data} options={options} />

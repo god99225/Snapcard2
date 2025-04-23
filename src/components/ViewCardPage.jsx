@@ -155,100 +155,106 @@ END:VCARD
             </button>
           </div>
 
-          <div className="new-card-section">
-            {selectedSection === 'design' && (
-              <div className="view-card-sections">
-                {/* Section 1: Stats */}
-                <div className="section-one">
-                  <div className="stats-box">
-                    <h4>Total Views</h4>
-                    <p>{card.totalViews || 0}</p>
-                  </div>
-                  <div className="stats-box">
-                    <h4>Total Shares</h4>
-                    <p>{card.totalShares || 0}</p>
-                  </div>
-                  <div className="stats-box">
-                    <h4>Total Contacts</h4>
-                    <p>{card.totalContacts || 0}</p>
-                  </div>
-                </div>
-              
-                {/* Section 2: QR Code */}
-                <div className="section-two">
-                  <div className="qr-box">
-                    <h4>Scan to Share</h4>
-                    <QRCode value={window.location.href} />
-                  </div>
-                </div>
-              
-                {/* Section 3: Social Media Links */}
-                <div className="section-three">
-                  <h4>Share on Social Media</h4>
-                  <div className="share-links">
-                    <a href={`https://facebook.com/sharer/sharer.php?u=${window.location.href}`} target="_blank" rel="noopener noreferrer">Facebook</a>
-                    <a href={`https://twitter.com/intent/tweet?url=${window.location.href}`} target="_blank" rel="noopener noreferrer">Twitter</a>
-                    <a href={`https://www.linkedin.com/shareArticle?url=${window.location.href}`} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                  </div>
-                </div>
+         <div className="new-card-section">
+         {selectedSection === 'design' && (
+          <div className="view-card-sections">
+            
+            {/* Section 1: Stats */}
+            <div className="section-one">
+              <div className="stats-box">
+                <h4>Total Views</h4>
+                <p>{card.totalViews || 0}</p>
               </div>
-            )}
+              <div className="stats-box">
+                <h4>Total Shares</h4>
+                <p>{card.totalShares || 0}</p>
+              </div>
+              <div className="stats-box">
+                <h4>Total Contacts</h4>
+                <p>{card.totalContacts || 0}</p>
+              </div>
+            </div>
 
-{selectedSection === 'info' && (
-  <div className="info-options">
-    {/* Card Details Section */}
-    <div className="settings-section">
-      <h4>Card Details</h4>
-      <p><strong>Name: </strong>{formData.firstName} {formData.lastName}</p>
-      <p><strong>Company: </strong>{formData.company}</p>
-      <p><strong>Title: </strong>{formData.title}</p>
-    </div>
+            {/* Section 2: QR Code */}
+            <div className="section-two">
+              <div className="qr-box">
+                <h4>Scan to Share</h4>
+                <QRCode value={window.location.href} size={160} />
+              </div>
+            </div>
 
-    {/* Personalized Link Section */}
-    <div className="settings-section">
-      <h4>Personalized Link</h4>
-      <input
-        type="text"
-        value={formData.personalizedLink || `${window.location.href}/${formData.firstName}-${formData.lastName}`}
-        readOnly
-      />
-      <button
-        className="copy-button"
-        onClick={() => navigator.clipboard.writeText(`${window.location.href}/${formData.firstName}-${formData.lastName}`)}
-      >
-        Copy Link
-      </button>
-    </div>
+            {/* Section 3: Social Media Links */}
+            <div className="section-three">
+              <h4>Share on Social Media</h4>
+              <div className="share-links">
+                <a href={`https://facebook.com/sharer/sharer.php?u=${window.location.href}`} target="_blank" rel="noopener noreferrer">Facebook</a>
+                <a href={`https://twitter.com/intent/tweet?url=${window.location.href}`} target="_blank" rel="noopener noreferrer">Twitter</a>
+                <a href={`https://www.linkedin.com/shareArticle?url=${window.location.href}`} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              </div>
+            </div>
 
-    {/* Pause/Unpause Card Section */}
-    <div className="settings-section">
-      <h4>Pause Card</h4>
-      <button className="pause-button" onClick={() => {/* Pause logic here */}}>
-        {card.paused ? 'Unpause Card' : 'Pause Card'}
-      </button>
-    </div>
-
-    {/* Delete Card Section */}
-    <div className="settings-section">
-    < h4>Delete Card</h4>
-        <p>Remove this card permanently from your project.</p>
-        <button className="delete-button" onClick={handleDeleteClick}>
-          Delete Card
-        </button>
-    </div>
-
-    {/* Logo inside QR Code Section */}
-    <div className="settings-section">
-      <h4>QR Code with Logo</h4>
-      <div className="qr-code-with-logo">
-        <QRCode value={window.location.href} />
-        {formData.logo && (
-          <img src={formData.logo} alt="Logo" className="qr-logo" />
+          </div>
         )}
-      </div>
-    </div>
-  </div>
-)}
+
+
+        {selectedSection === 'info' && (
+          <div className="info-options">
+
+            {/* Card Details Section */}
+            <div className="settings-section">
+              <h4>Card Details</h4>
+              <p><strong>Name: </strong>{formData.firstName} {formData.lastName}</p>
+              <p><strong>Company: </strong>{formData.company}</p>
+              <p><strong>Title: </strong>{formData.title}</p>
+            </div>
+
+            {/* Personalized Link Section */}
+            <div className="settings-section">
+              <h4>Personalized Link</h4>
+              <input
+                type="text"
+                value={formData.personalizedLink || `${window.location.href}/${formData.firstName}-${formData.lastName}`}
+                readOnly
+              />
+              <button
+                className="copy-button"
+                onClick={() => navigator.clipboard.writeText(`${window.location.href}/${formData.firstName}-${formData.lastName}`)}
+              >
+                Copy Link
+              </button>
+            </div>
+
+            {/* Pause/Unpause Card Section */}
+            <div className="settings-section">
+              <h4>Pause Card</h4>
+              <button className="pause-button" onClick={() => {/* Pause logic here */}}>
+                {card.paused ? 'Unpause Card' : 'Pause Card'}
+              </button>
+            </div>
+
+            {/* Delete Card Section */}
+            <div className="settings-section">
+              <h4>Delete Card</h4>
+              <p>Remove this card permanently from your project.</p>
+              <button className="delete-button" onClick={handleDeleteClick}>
+                Delete Card
+              </button>
+            </div>
+
+            {/* QR Code with Logo Section */}
+            <div className="settings-section">
+              <h4>QR Code with Logo</h4>
+              <div className="qr-code-with-logo">
+                <QRCode value={window.location.href} />
+                {formData.logo && (
+                  <img src={formData.logo} alt="Logo" className="qr-logo" />
+                )}
+              </div>
+            </div>
+
+          </div>
+        )}
+
 
 
             {selectedSection === 'widget' && (

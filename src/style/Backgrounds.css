@@ -2,8 +2,8 @@
 .backgrounds-page {
   display: flex;
   height: 100vh;
-  margin-left: 250px;
   background-color: #f4f4f4;
+  overflow: hidden;
 }
 
 /* Sidebar */
@@ -16,8 +16,13 @@
 
 /* Main Content */
 .backgrounds-main-content {
-  flex: 1;
-  padding: 20px;
+  padding: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
 }
 
@@ -42,9 +47,10 @@
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 250px;
+  width: 150px;
   cursor: pointer;
   transition: 0.3s;
+  text-align: center;
 }
 
 .backgrounds-card:hover, .selected-card {
@@ -70,14 +76,15 @@
 .backgrounds-frame-gallery {
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-items: flex-start;
 }
 
 .backgrounds-frame-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsively adjust columns */
   gap: 30px;
-  max-width: 600px;
+  max-width: 900px;
+  margin-top: 20px;
 }
 
 .backgrounds-frame-item {
@@ -88,7 +95,6 @@
   text-align: center;
   cursor: pointer;
   transition: 0.3s;
-  width: 250px;
   height: 150px;
   display: flex;
   justify-content: center;
@@ -116,7 +122,8 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 900px;
+  width: 100%;
+  max-width: 900px;
   height: 300px;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -171,4 +178,70 @@
 
 .backgrounds-download-btn:hover {
   background: #0056b3;
+}
+
+/* Media Queries for Responsiveness */
+
+/* For Medium Screens (Tablets and Below) */
+@media (max-width: 768px) {
+  .backgrounds-sidebar {
+    width: 200px;
+  }
+
+  .backgrounds-main-content {
+    padding: 20px;
+  }
+
+  .backgrounds-frame-grid {
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+  }
+
+  .backgrounds-frame-preview-container {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+  }
+
+  .backgrounds-frame-preview {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* For Small Screens (Phones) */
+@media (max-width: 480px) {
+  .backgrounds-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .backgrounds-main-content {
+    margin-left: 0;
+    padding: 20px;
+    width: 300%;
+  }
+
+  .backgrounds-cards-container {
+    gap: 15px;
+  }
+
+  .backgrounds-card {
+    width: 100%; /* Full width cards on small screens */
+  }
+
+  .backgrounds-frame-grid {
+    grid-template-columns: 1fr; /* Single column */
+  }
+
+  .backgrounds-frame-preview-container {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+  }
+
+  .backgrounds-frame-preview {
+    width: 100%;
+    height: auto;
+  }
 }

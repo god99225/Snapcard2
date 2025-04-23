@@ -1,143 +1,222 @@
-/* Help.css */
+/* Reset default margins and paddings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+html, body {
+  height: 100%;
+  overflow: hidden; /* Prevents extra scrollbars */
+  background-color: #f0f2f5;
+}
+
+/* Help Page Layout */
 .help-page {
-    display: flex;
-    min-height: 100vh;
+  display: flex;
+  height: 100vh; /* Full height */
+  overflow: hidden; /* Prevent double scrollbar */
+}
+
+/* Sidebar Styling */
+/* .sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+} */
+
+/* Main Help Content */
+.help-main-content {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Allows scrolling within content */
+}
+
+/* Hide scrollbar but allow scrolling */
+.help-main-content::-webkit-scrollbar {
+  display: none;
+}
+
+.help-main-content {
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+/* Help Page Title */
+.help-title {
+  font-size: 36px;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Search Bar */
+.help-search-bar {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.help-search-bar input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.help-search-bar input:focus {
+  border-color: #0056b3;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
+
+/* Help Sections */
+.help-faq-section,
+.help-troubleshooting-section,
+.help-user-guides-section,
+.help-support-contact,
+.help-additional-features {
+  margin-top: 30px;
+}
+
+.help-faq-section h3,
+.help-troubleshooting-section h3,
+.help-user-guides-section h3,
+.help-support-contact h3,
+.help-additional-features h3 {
+  font-size: 22px;
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+/* FAQ Item */
+.faq-item {
+  background-color: #f1f8ff;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s;
+}
+
+.faq-item:hover {
+  background-color: #e6f7ff;
+}
+
+/* FAQ Question */
+.faq-question {
+  font-weight: bold;
+  cursor: pointer;
+  color: #0056b3;
+}
+
+.faq-answer {
+  margin-top: 5px;
+  padding-left: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Support Contact */
+.help-support-contact p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.help-support-contact a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.help-support-contact a:hover {
+  text-decoration: underline;
+}
+
+/* Additional Features */
+.help-additional-features ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.help-additional-features li {
+  background: #f1f8ff;
+  border-radius: 5px;
+  margin: 5px 0;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.help-additional-features li:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.help-additional-features a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.help-additional-features a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px; /* Smaller sidebar */
   }
-  
+
   .help-main-content {
-    flex: 1;
-    padding: 40px;
-    border-radius: 8px;
-    margin-left: 250px;
+    padding: 20px;
   }
-  
+
   .help-title {
     font-size: 28px;
-    color: #333;
-    margin-bottom: 20px;
-    text-align: center;
   }
-  
-  .help-search-bar {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-  }
-  
+
   .help-search-bar input {
-    width: 100%;
-    max-width: 400px;
-    padding: 12px;
-    border: 2px solid #007bff;
-    border-radius: 5px;
-    transition: border-color 0.3s;
+    max-width: 100%;
   }
-  
-  .help-search-bar input:focus {
-    border-color: #0056b3;
-    outline: none;
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%; /* Full width sidebar for small screens */
+    height: auto;
+    position: relative;
   }
-  
-  .help-faq-section,
-  .help-troubleshooting-section,
-  .help-user-guides-section,
-  .help-support-contact,
-  .help-additional-features {
-    margin-top: 30px;
+
+  .help-main-content {
+    margin-left: 0; /* No sidebar margin on small screens */
+    width: 300%;
+    padding: 20px;
   }
-  
-  .help-faq-section h3,
-  .help-troubleshooting-section h3,
-  .help-user-guides-section h3,
-  .help-support-contact h3,
-  .help-additional-features h3 {
-    font-size: 22px;
-    color: #007bff;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
+
+  .help-title {
+    font-size: 24px;
   }
-  
-  .faq-item {
-    background-color: #f1f8ff;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 10px;
-    transition: background-color 0.3s;
-  }
-  
-  .faq-item:hover {
-    background-color: #e6f7ff;
-  }
-  
-  .faq-question {
-    font-weight: bold;
-    cursor: pointer;
-    color: #0056b3;
-  }
-  
-  .faq-answer {
-    margin-top: 5px;
-    padding-left: 15px;
+
+  .help-search-bar input {
     font-size: 14px;
-    color: #666;
   }
-  
-  .help-support-contact p {
-    margin: 5px 0;
-    font-size: 16px;
-  }
-  
-  .help-support-contact a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .help-support-contact a:hover {
-    text-decoration: underline;
-  }
-  
-  .help-additional-features ul {
-    list-style-type: none;
-    padding-left: 0;
-  }
-  
+
   .help-additional-features li {
-    background: #f1f8ff;
-    border-radius: 5px;
-    margin: 5px 0;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
+    font-size: 14px;
   }
-  
-  .help-additional-features li:hover {
-    transform: scale(1.02);
-  }
-  
-  .help-additional-features a {
-    color: #0056b3;
-    text-decoration: none;
-  }
-  
-  .help-additional-features a:hover {
-    text-decoration: underline;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .help-main-content {
-      padding: 20px;
-    }
-  
-    .help-title {
-      font-size: 24px;
-    }
-  
-    .help-search-bar input {
-      max-width: 100%;
-    }
-  }
-  
+}

@@ -1,21 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import '../style/Sidebar.css';
 
 function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
   return (
-    <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+    <div className="sidebar">
       <div className="logo">
-        <img src="/assets/Snapcard logo2.png" alt="Logo" /> {/* Replace with the actual logo path */}
-        <button onClick={toggleSidebar} className="toggle-btn">
-          {/* <i className="fas fa-bars"></i> */}
-        </button>
+        <img src="/assets/Snapcard logo2.png" alt="Logo" className="logo-img" />
       </div>
       <nav>
         <ul>

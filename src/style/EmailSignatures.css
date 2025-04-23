@@ -1,42 +1,68 @@
-/* Container for the entire page */
-.email-signatures-container {
+/* Reset default margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    height: 100%;
+    overflow: hidden; /* Prevents double scrollbar */
+    background-color: #f4f4f4;
+  }
+  
+  /* Container for the entire page */
+  .email-signatures-container {
     display: flex;
     height: 100vh;
     background-color: #f4f4f4;
-}
-
-/* Styling for the main content area */
-.content-wrapper {
-    margin-left: 250px; /* Adjust according to sidebar width */
+    overflow: hidden; /* Prevents extra scrollbars */
+  }
+  
+  /* Styling for the main content area */
+  .content-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     padding: 30px;
-    width: calc(100% - 250px);
-    overflow-y: auto;
-}
-
-/* Page title and introduction text */
-.page-heading {
+    background-color: #fff;
+    overflow-y: auto; /* Enable scroll if needed */
+  }
+  
+  /* Hide the scrollbar but allow scrolling */
+  .content-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .content-wrapper {
+    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+  }
+  
+  /* Page title and introduction text */
+  .page-heading {
     font-size: 2.5rem;
     color: #2a2a2a;
     margin-bottom: 15px;
     font-weight: 600;
     text-align: left;
-}
-
-.page-intro {
+  }
+  
+  .page-intro {
     font-size: 1.2rem;
     color: #6b6b6b;
     margin-bottom: 30px;
-}
-
-/* Grid layout for card previews */
-.cards-grid {
+  }
+  
+  /* Grid layout for card previews */
+  .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 25px;
-}
-
-/* Styling for card previews */
-.card-preview {
+  }
+  
+  /* Styling for card previews */
+  .card-preview {
     background: #ffffff;
     border-radius: 15px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
@@ -46,20 +72,20 @@
     text-align: center;
     position: relative;
     border: 1px solid #e0e0e0;
-}
-
-.card-preview:hover {
+  }
+  
+  .card-preview:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.card-name {
+  }
+  
+  .card-name {
     font-size: 1.75rem;
     font-weight: 500;
     color: #2a2a2a;
     margin: 20px 0;
-}
-
+  }
+  
 /* Modal overlay with smooth fade-in effect */
 .modal-overlay {
     position: fixed;
@@ -257,3 +283,44 @@
         text-align: center;
     }
 }
+
+@media (max-width: 768px) {
+    .sidebar {
+      width: 200px; /* Smaller sidebar */
+    }
+  
+    .content-wrapper {
+      padding: 20px;
+    }
+  
+    /* .account-settings-title {
+      font-size: 28px;
+    } */
+  }
+  
+  @media (max-width: 480px) {
+    .sidebar {
+      width: 100%; /* Full width sidebar for small screens */
+      height: auto;
+      position: relative;
+    }
+  
+    .content-wrapper {
+      margin-left: 0; /* No sidebar margin on small screens */
+      padding: 20px;
+      width: 300%;
+    }
+  
+    /* .account-settings-title {
+      font-size: 24px;
+    }
+  
+    .account-settings-group input {
+      font-size: 14px;
+    }
+  
+    .account-settings-features li {
+      font-size: 14px;
+    } */
+  }
+  

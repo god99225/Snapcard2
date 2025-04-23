@@ -120,7 +120,7 @@ function NewCardPage() {
   };
   
   return (
-    <div className="new-card-page-container">
+    <div className="new-card-page">
       <Sidebar />
       <div className="new-card-layout">
       <div className={`new-card-card ${selectedFrame} ${formData.shape}`}>
@@ -172,7 +172,7 @@ function NewCardPage() {
               )
             ))}
           </div>
-</div>
+        </div>
 
         <div className="new-card-details-container">
           <div className="new-card-tabs">

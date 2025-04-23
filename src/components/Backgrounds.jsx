@@ -46,18 +46,20 @@ const Backgrounds = () => {
             {cards.length === 0 ? (
               <p className="backgrounds-no-cards">No cards available.</p>
             ) : (
-              cards.map((card, index) => (
-                <div 
-                  key={index} 
-                  className={`backgrounds-card ${selectedCard === card ? 'selected-card' : ''}`}
-                  onClick={() => handleCardSelect(card)}
-                >
-                  <div className="card-header"></div>
-                  <div className="backgrounds-card-content">
-                    <h2 className="backgrounds-card-title">{card.firstName} {card.lastName}</h2>
+              <div className="backgrounds-card-grid">
+                {cards.map((card, index) => (
+                  <div 
+                    key={index} 
+                    className={`backgrounds-card ${selectedCard === card ? 'selected-card' : ''}`}
+                    onClick={() => handleCardSelect(card)}
+                  >
+                    <div className="card-header"></div>
+                    <div className="backgrounds-card-content">
+                      <h2 className="backgrounds-card-title">{card.firstName} {card.lastName}</h2>
+                    </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
         </div>
@@ -93,7 +95,6 @@ const Backgrounds = () => {
                 </div>
               </div>
             )}
-            
             <div className="backgrounds-frame-grid">
               {frames.map((frame) => (
                 <div

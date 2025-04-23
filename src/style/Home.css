@@ -1,76 +1,104 @@
-/* Ensure the home page background is white */
-body {
-    background-color: #fff; /* White background for the entire page */
+/* Reset default margins and paddings */
+* {
     margin: 0;
-    font-family: Arial, sans-serif;
-}
-
-/* Ensure the main content area is correctly positioned */
-.home-container {
-    margin-left: 250px; /* Adjust based on sidebar width */
-    width: calc(100% - 250px); /* Adjust width to accommodate sidebar */
+    padding: 0;
     box-sizing: border-box;
-    background-color: #ffffff; /* White background for the home page */
-}
-
-/* Header styles */
-.header {
+  }
+  
+  html, body {
+    height: 100%;
+    overflow: hidden; /* Prevents double scrollbar */
+    background-color: #ffffff;
+  }
+  
+  /* Home Page Container */
+  .home-container {
     display: flex;
-    align-items: center; /* Align items vertically in the center */
-    justify-content: flex-end; /* Align items to the right */
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 1rem;
-    width: 100%; /* Full width to match container */
-    background-color: #fff; /* Match the background color */
-    padding: 1rem; /* Add padding for spacing */
-}
-
-.profile {
+    height: 100vh;
+    background-color: #ffffff;
+    overflow: hidden; /* Prevents extra scrollbars */
+  }
+  
+  /* Main content area */
+  .dashboard-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+  }
+  
+  .main-content {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+    overflow-y: auto; /* Allow scrolling */
+  }
+  
+  /* Hide the scrollbar but allow scrolling */
+  .main-content::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .main-content {
+    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+  }
+  
+  /* Section title */
+  .sep h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Search and sorting container */
+  .search-sorting {
+    display: grid;
+    justify-content: center;    
+    font-size: 1rem;
+    gap: 5px;
+  }
+  
+  /* Search input */
+  .search-input {
+    font-size: 1rem;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Sort button */
+  .sort-button {
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
     display: flex;
     align-items: center;
-}
-
-.profile-img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    margin-right: 1rem;
-    border: 2px solid #8E44AD; /* Optional: Add a border to profile image */
-}
-
-.profile-info h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: #333;
-}
-
-.profile-info p {
-    margin: 0;
-    color: #666;
-}
-
-.sep {
-    margin-top: 50px;
-}
-
-.main-content {
-    width: 100%;
-    text-align: center; /* Center the content */
-}
-
+    font-size: 1rem;
+    gap: 5px;
+  }
+  
+  .sort-button:hover {
+    background-color: #0056b3;
+  }
+  
 /* New card button */
-.new-card-btn {
+.new-card-btn1 {
+    display: flex;
     background-color: #8E44AD;
     color: #fff;
-    padding: 0.8rem 1.5rem;
+    padding: 10px;
     border: none;
     border-radius: 4px;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-top: 1rem; /* Add spacing above the button */
-    margin-bottom: 50px;
 }
 
 .new-card-btn:hover {
@@ -94,55 +122,6 @@ body {
 }
 
 
-.search-sorting {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  max-width: 750px;
-  margin-left: 40px;
-  margin-top: 30px;
-}
-
-.search-input {
-  width: 100px; /* Set width for search input */
-  padding: 5px;
-  margin-right: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.sort-button {
-  padding: 5px 10px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-right: 10px;
-  margin-bottom: 10px;
-}
-
-.sort-button:hover {
-  background-color: #0056b3;
-}
-
-
-.new-card-btn1 {
-    padding: 5px 10px;
-    border: none;
-    background-color: #28a745;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100px;
-    margin-bottom: 10px;
-  }
-  
-  .new-card-btn:hover {
-    background-color: #218838;
-  }
-
-
 .show-cards-option button:hover {
     background-color: #2980B9; /* Darker shade for hover */
 }
@@ -154,7 +133,7 @@ body {
     gap: 4.5rem;
     flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
     padding: 10px ;
-    margin: 10px 10px 10px 0px;
+    margin: 10px 10px 10px 30px;
 }
 
 /* Card styles */
@@ -304,4 +283,49 @@ body {
   }
 
 
+  
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 200px; /* Smaller sidebar */
+    }
+  
+    .dashboard-wrapper {
+      padding: 0px;
+    }
+    /* .search-sorting{
+      margin: 0 10px 0 10px;
+    } */
+  
+    /* .account-settings-title {
+      font-size: 28px;
+    } */
+  }
+  
+  @media (max-width: 480px) {
+    .sidebar {
+      width: 100%; /* Full width sidebar for small screens */
+      height: auto;
+      position: relative;
+    }
+  
+    .dashboard-wrapper {
+      margin-left: 0; /* No sidebar margin on small screens */
+      padding: 00px;
+      width: 300%;
+    }
+
+
+  
+    /* .account-settings-title {
+      font-size: 24px;
+    }
+  
+    .account-settings-group input {
+      font-size: 14px;
+    }
+  
+    .account-settings-features li {
+      font-size: 14px;
+    } */
+  }
   
