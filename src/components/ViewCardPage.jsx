@@ -159,7 +159,8 @@ END:VCARD
          {selectedSection === 'design' && (
           <div className="view-card-sections">
             
-            {/* Section 1: Stats */}
+                {/* Section 1: Stats */}
+                <div className="oop">
             <div className="section-one">
               <div className="stats-box">
                 <h4>Total Views</h4>
@@ -173,7 +174,8 @@ END:VCARD
                 <h4>Total Contacts</h4>
                 <p>{card.totalContacts || 0}</p>
               </div>
-            </div>
+                  </div>
+                  </div>
 
             {/* Section 2: QR Code */}
             <div className="section-two">

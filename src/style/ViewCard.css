@@ -388,10 +388,10 @@
 }
 
 /* Stats Section */
+
 .section-one {
-  /* display: grid; */
+  display: grid;
   grid-template-rows: 3fr;
-  gap: 1.5rem;
 }
 
 @media (min-width: 600px) {
