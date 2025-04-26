@@ -14,6 +14,7 @@ import Settings from './components/Settings'; // Assuming you create this compon
 import ViewCardPage from './components/ViewCardPage';
 import Help from './components/Help';
 import Support from './components/Support';
+import SharedCardPage from './components/SharedCardPage';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/help" element={<Help />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/shared-card" element={<SharedCardPage />} />
       </Routes>
     </Router>
   );

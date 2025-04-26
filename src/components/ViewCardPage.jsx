@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import { encode as btoa } from 'js-base64';
 import '../style/ViewCard.css';
 import QRCode from 'react-qr-code'; // Make sure to install react-qr-code package
 
@@ -84,10 +85,14 @@ END:VCARD
     navigate('/home');
   };
 
+  const shareData = btoa(JSON.stringify(formData));
+  const shareUrl = `${window.location.origin}/shared-card?data=${shareData}`;
+
   return (
     <div className="new-card-page-container">
       <Sidebar />
       <div className="new-card-layout">
+        {/* card view */}
         <div className={`new-card-card ${selectedFrame} ${formData.shape}`}>
           <div className="card-header" style={{ backgroundColor: formData.color }}>
             {formData.logo && <img src={formData.logo} alt="Logo" className="card-logo" />}
@@ -181,8 +186,7 @@ END:VCARD
             <div className="section-two">
               <div className="qr-box">
                 <h4>Scan to Share</h4>
-                <QRCode value={window.location.href} size={160} />
-              </div>
+                <QRCode value={shareUrl} size={160} />              </div>
             </div>
 
             {/* Section 3: Social Media Links */}
