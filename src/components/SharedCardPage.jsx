@@ -30,13 +30,11 @@ function SharedCardPage() {
     existingContacts.push(newContact);
     localStorage.setItem('contactsData', JSON.stringify(existingContacts));
   
+    // Inform user and close modal
     alert('Contact Added Successfully!');
     setShowModal(false);
     setForm({ name: '', number: '', email: '' });
-  
-    // 🚀 ADD THIS LINE:
-    window.location.reload(); 
-  };
+  };  
   
 
   return (
