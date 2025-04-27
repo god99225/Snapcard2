@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar';
-import '../style/Contacts.css';
+import Sidebar from './Sidebar'; 
+import '../style/Contacts.css'; 
 
 function Contacts() {
-  const [contacts, setContacts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
+    // Fetch contacts from localStorage instead of hardcoded
     const storedContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
     setContacts(storedContacts);
-  }, []);
+  }, []); // runs only once when page loads
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
