@@ -20,20 +20,24 @@ function SharedCardPage() {
     e.preventDefault();
     const newContact = {
       name: form.name,
-      position: 'Connected via Card',  // You can customize
+      position: 'Connected via Card',
       email: form.email,
       number: form.number,
-      logo: '/assets/contact1.png', // Default logo
+      logo: '/assets/contact1.png',
     };
-
+  
     const existingContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
     existingContacts.push(newContact);
     localStorage.setItem('contactsData', JSON.stringify(existingContacts));
-
+  
     alert('Contact Added Successfully!');
     setShowModal(false);
-    setForm({ name: '', number: '', email: '' }); // Clear form
+    setForm({ name: '', number: '', email: '' });
+  
+    // 🚀 ADD THIS LINE:
+    window.location.reload(); 
   };
+  
 
   return (
     <div className="new-card-page-container">
