@@ -1,19 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import '../style/ViewCard.css';
-
+import '../style/SharedCard.css'; // Make sure modal CSS is there
 
 function SharedCardPage() {
   const query = new URLSearchParams(useLocation().search);
   const data = query.get('data');
   const cardData = data ? JSON.parse(atob(data)) : null;
 
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState({ name: '', number: '', email: '' });
+
   if (!cardData) return <div>Invalid or expired card link.</div>;
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newContact = {
+      name: form.name,
+      position: 'Connected via Card',  // You can customize
+      email: form.email,
+      number: form.number,
+      logo: '/assets/contact1.png', // Default logo
+    };
+
+    const existingContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
+    existingContacts.push(newContact);
+    localStorage.setItem('contactsData', JSON.stringify(existingContacts));
+
+    alert('Contact Added Successfully!');
+    setShowModal(false);
+    setForm({ name: '', number: '', email: '' }); // Clear form
+  };
 
   return (
     <div className="new-card-page-container">
       <div className="new-card-layout">
-        
+
         <div className={`new-card-card ${cardData.selectedFrame || 'frame1'} ${cardData.shape || 'rectangle'}`}>
           <div className="card-header" style={{ backgroundColor: cardData.color || '#ff5722' }}>
             {cardData.logo && <img src={cardData.logo} alt="Logo" className="card-logo" />}
@@ -49,8 +74,49 @@ function SharedCardPage() {
               )
             ))}
           </div>
-
         </div>
+
+        {/* Connect Button */}
+        <button className="connect-button" onClick={() => setShowModal(true)}>Connect</button>
+
+        {/* Modal */}
+        {showModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h2>Add to Contacts</h2>
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Name"
+                  value={form.name}
+                  onChange={handleChange}
+                  required
+                />
+                <input
+                  type="text"
+                  name="number"
+                  placeholder="Phone Number"
+                  value={form.number}
+                  onChange={handleChange}
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email ID"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                />
+                <div className="modal-buttons">
+                  <button type="submit" className="submit-button">Add Contact</button>
+                  <button type="button" onClick={() => setShowModal(false)} className="cancel-button">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
