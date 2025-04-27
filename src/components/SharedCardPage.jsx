@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import '../style/SharedCard.css'; // Make sure modal CSS is there
+import '../style/ViewCard.css';
 
 function SharedCardPage() {
   const query = new URLSearchParams(useLocation().search);
