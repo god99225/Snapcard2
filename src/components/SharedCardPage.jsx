@@ -19,8 +19,13 @@ function SharedCardPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    const ownerUserId = cardData.userId; // 👈 Assuming QR contains the owner's userId
+  
+    const currentUserEmail = localStorage.getItem('userEmail'); // 🔥 Get logged-in user's email
+    if (!currentUserEmail) {
+      alert('Please login first to add contacts.');
+      return;
+    }
+  
     const newContact = {
       name: form.name,
       position: 'Connected via Card',
@@ -29,9 +34,9 @@ function SharedCardPage() {
       logo: '/assets/contact1.png',
     };
   
-    const existingContacts = JSON.parse(localStorage.getItem(`contactsData_${ownerUserId}`)) || [];
+    const existingContacts = JSON.parse(localStorage.getItem(`contactsData_${currentUserEmail}`)) || [];
     existingContacts.push(newContact);
-    localStorage.setItem(`contactsData_${ownerUserId}`, JSON.stringify(existingContacts));
+    localStorage.setItem(`contactsData_${currentUserEmail}`, JSON.stringify(existingContacts));
   
     alert('Contact Added Successfully!');
     setShowModal(false);

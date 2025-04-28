@@ -8,9 +8,13 @@ function Contacts() {
 
   // Fetch contacts from localStorage when the component is mounted
   useEffect(() => {
-    const currentUserId = "loggedInUserId"; // 👈 get the currently logged-in user's id here
-    const storedContacts = JSON.parse(localStorage.getItem(`contactsData_${currentUserId}`)) || [];
-    setContacts(storedContacts);
+    const currentUserEmail = localStorage.getItem('userEmail'); // 🔥 Get logged-in user's email
+    if (currentUserEmail) {
+      const storedContacts = JSON.parse(localStorage.getItem(`contactsData_${currentUserEmail}`)) || [];
+      setContacts(storedContacts);
+    } else {
+      setContacts([]);
+    }
   }, []);
   
 
