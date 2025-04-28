@@ -22,8 +22,13 @@ function Login() {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      localStorage.setItem('userToken', user.accessToken); // Store user token
-      localStorage.setItem('userEmail', user.email); // Store email
+
+      // Store user ID, email, and token in localStorage
+      localStorage.setItem('userToken', user.accessToken);
+      localStorage.setItem('userEmail', user.email);
+      localStorage.setItem('userId', user.uid);  // Store the user's UID
+
+      // Redirect to home page
       navigate('/home', { state: { email: user.email } });
     } catch (err) {
       setError('Invalid email or password. Please try again.');
@@ -34,7 +39,7 @@ function Login() {
     <div className="login-page">
       <div className="login-container">
         <div className="login-card">
-        <img 
+          <img 
             src="/assets/Snapcard logo.png" 
             alt="Snapcard Logo" 
             style={{ width: "250px", height: "auto", display: "block", margin: "0 auto" }} 

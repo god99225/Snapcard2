@@ -3,46 +3,53 @@ import { useLocation } from 'react-router-dom';
 import '../style/ViewCard.css';
 
 function SharedCardPage() {
-  const query = new URLSearchParams(useLocation().search);
-  const data = query.get('data');
-  const cardData = data ? JSON.parse(atob(data)) : null;
-
-  const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name: '', number: '', email: '' });
-
-  if (!cardData) return <div>Invalid or expired card link.</div>;
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    const newContact = {
-      name: form.name,
-      number: form.number,
-      email: form.email,
-      connectedTo: {
-        ownerName: `${cardData.firstName} ${cardData.lastName}`,
-        company: cardData.company,
-        department: cardData.department,
-        cardHeadline: cardData.headline,
-      },
-      logo: '/assets/contact1.png', // Default logo
+    const query = new URLSearchParams(useLocation().search);
+    const data = query.get('data');
+    const cardData = data ? JSON.parse(atob(data)) : null;
+  
+    const [showModal, setShowModal] = useState(false);
+    const [form, setForm] = useState({ name: '', number: '', email: '' });
+  
+    if (!cardData) return <div>Invalid or expired card link.</div>;
+  
+    const handleChange = (e) => {
+      setForm({ ...form, [e.target.name]: e.target.value });
     };
   
-    const existingContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
-    existingContacts.push(newContact);
-    localStorage.setItem('contactsData', JSON.stringify(existingContacts));
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      
+      const newContact = {
+        name: form.name,
+        position: 'Connected via Card',
+        email: form.email,
+        number: form.number,
+        logo: '/assets/contact1.png',
+      };
   
-    alert('Contact Added Successfully!');
-    setShowModal(false);
-    setForm({ name: '', number: '', email: '' });
-  };
+      // Get the logged-in user's ID from localStorage
+      const userId = localStorage.getItem('userId');
+      
+      if (!userId) {
+        alert("Please log in first.");
+        return;
+      }
+  
+      // Retrieve the user's existing contacts using their UID
+      const existingContacts = JSON.parse(localStorage.getItem(userId)) || [];
+  
+      // Add the new contact to the user's list
+      existingContacts.push(newContact);
+  
+      // Save the updated contacts list for that user
+      localStorage.setItem(userId, JSON.stringify(existingContacts));
+  
+      // Inform user and close modal
+      alert('Contact Added Successfully!');
+      setShowModal(false);
+      setForm({ name: '', number: '', email: '' });
+    };
     
-  
-
   return (
     <div className="new-card-page-container">
       <div className="new-card-layout">
@@ -86,7 +93,6 @@ function SharedCardPage() {
 
         {/* Connect Button */}
         <button className="connect-button" onClick={() => setShowModal(true)}>Connect</button>
-
         {/* Modal */}
         {showModal && (
           <div className="modal-overlay">
