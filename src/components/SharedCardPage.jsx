@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../style/ViewCard.css';
+import { useNavigate } from 'react-router-dom'; // add this at the top
 
 function SharedCardPage() {
   const query = new URLSearchParams(useLocation().search);
@@ -16,25 +17,28 @@ function SharedCardPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate(); // inside your SharedCardPage
+
+    const handleSubmit = (e) => {
     e.preventDefault();
     const newContact = {
-      name: form.name,
-      position: 'Connected via Card',
-      email: form.email,
-      number: form.number,
-      logo: '/assets/contact1.png',
+        name: form.name,
+        position: 'Connected via Card',
+        email: form.email,
+        number: form.number,
+        logo: '/assets/contact1.png',
     };
-  
+
     const existingContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
     existingContacts.push(newContact);
     localStorage.setItem('contactsData', JSON.stringify(existingContacts));
-  
-    // Inform user and close modal
+
     alert('Contact Added Successfully!');
     setShowModal(false);
     setForm({ name: '', number: '', email: '' });
-  };  
+
+    navigate('/contacts'); // 👈 after adding contact, go to Contacts page
+    };
   
 
   return (

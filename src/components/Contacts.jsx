@@ -8,22 +8,9 @@ function Contacts() {
 
   // Fetch contacts from localStorage when the component is mounted
   useEffect(() => {
-    const fetchContacts = () => {
-      const storedContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
-      setContacts(storedContacts);
-    };
-  
-    fetchContacts(); // fetch initially
-  
-    // Listen for localStorage changes
-    window.addEventListener('storage', fetchContacts);
-  
-    // Cleanup event listener
-    return () => {
-      window.removeEventListener('storage', fetchContacts);
-    };
+    const storedContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
+    setContacts(storedContacts);
   }, []);
-  
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
