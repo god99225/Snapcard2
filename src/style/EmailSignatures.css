@@ -155,7 +155,7 @@
     margin-bottom: 15px;
     font-size: 2rem;
     font-weight: 600;
-    color: #ffffff;
+    color: #090000;
 }
 
 .card-details {
@@ -167,7 +167,7 @@
 .card-details li {
     margin-bottom: 12px;
     font-size: 1.1rem;
-    color: #c7c7c7;
+    color: #747171;
 }
 
 /* Modal right section for QR code and social media */

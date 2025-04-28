@@ -18,23 +18,29 @@ function SharedCardPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
     const newContact = {
       name: form.name,
-      position: 'Connected via Card',
-      email: form.email,
       number: form.number,
-      logo: '/assets/contact1.png',
+      email: form.email,
+      connectedTo: {
+        ownerName: `${cardData.firstName} ${cardData.lastName}`,
+        company: cardData.company,
+        department: cardData.department,
+        cardHeadline: cardData.headline,
+      },
+      logo: '/assets/contact1.png', // Default logo
     };
   
     const existingContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
     existingContacts.push(newContact);
     localStorage.setItem('contactsData', JSON.stringify(existingContacts));
   
-    // Inform user and close modal
     alert('Contact Added Successfully!');
     setShowModal(false);
     setForm({ name: '', number: '', email: '' });
-  };  
+  };
+    
   
 
   return (
