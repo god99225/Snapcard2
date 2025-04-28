@@ -17,28 +17,27 @@ function SharedCardPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const navigate = useNavigate(); // inside your SharedCardPage
-
-    const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    
+    const ownerUserId = cardData.userId; // 👈 Assuming QR contains the owner's userId
     const newContact = {
-        name: form.name,
-        position: 'Connected via Card',
-        email: form.email,
-        number: form.number,
-        logo: '/assets/contact1.png',
+      name: form.name,
+      position: 'Connected via Card',
+      email: form.email,
+      number: form.number,
+      logo: '/assets/contact1.png',
     };
-
-    const existingContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
+  
+    const existingContacts = JSON.parse(localStorage.getItem(`contactsData_${ownerUserId}`)) || [];
     existingContacts.push(newContact);
-    localStorage.setItem('contactsData', JSON.stringify(existingContacts));
-
+    localStorage.setItem(`contactsData_${ownerUserId}`, JSON.stringify(existingContacts));
+  
     alert('Contact Added Successfully!');
     setShowModal(false);
     setForm({ name: '', number: '', email: '' });
-
-    navigate('/contacts'); // 👈 after adding contact, go to Contacts page
-    };
+  };
+  
   
 
   return (

@@ -8,9 +8,11 @@ function Contacts() {
 
   // Fetch contacts from localStorage when the component is mounted
   useEffect(() => {
-    const storedContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
+    const currentUserId = "loggedInUserId"; // 👈 get the currently logged-in user's id here
+    const storedContacts = JSON.parse(localStorage.getItem(`contactsData_${currentUserId}`)) || [];
     setContacts(storedContacts);
   }, []);
+  
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
