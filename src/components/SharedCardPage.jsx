@@ -118,7 +118,6 @@ function SharedCardPage() {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
