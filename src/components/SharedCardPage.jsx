@@ -1,7 +1,8 @@
+// SharedCardPage.jsx
+
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../style/ViewCard.css';
-import { useNavigate } from 'react-router-dom'; // add this at the top
 
 function SharedCardPage() {
   const query = new URLSearchParams(useLocation().search);
@@ -10,22 +11,24 @@ function SharedCardPage() {
 
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ name: '', number: '', email: '' });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   if (!cardData) return <div>Invalid or expired card link.</div>;
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    const currentUserEmail = localStorage.getItem('userEmail'); // 🔥 Get logged-in user's email
-    if (!currentUserEmail) {
-      alert('Please login first to add contacts.');
+
+    const ownerEmail = cardData.ownerEmail; // Card Owner's Email
+    if (!ownerEmail) {
+      alert('Owner information missing.');
       return;
     }
-  
+
     const newContact = {
       name: form.name,
       position: 'Connected via Card',
@@ -33,22 +36,25 @@ function SharedCardPage() {
       number: form.number,
       logo: '/assets/contact1.png',
     };
-  
-    const existingContacts = JSON.parse(localStorage.getItem(`contactsData_${currentUserEmail}`)) || [];
+
+    // Get existing contacts for that owner
+    const existingContacts = JSON.parse(localStorage.getItem(`contactsData_${ownerEmail}`)) || [];
     existingContacts.push(newContact);
-    localStorage.setItem(`contactsData_${currentUserEmail}`, JSON.stringify(existingContacts));
-  
+
+    // Save updated contact list
+    localStorage.setItem(`contactsData_${ownerEmail}`, JSON.stringify(existingContacts));
+
     alert('Contact Added Successfully!');
+    setIsSubmitted(true);
     setShowModal(false);
     setForm({ name: '', number: '', email: '' });
   };
-  
-  
 
   return (
     <div className="new-card-page-container">
       <div className="new-card-layout">
 
+        {/* Card Display */}
         <div className={`new-card-card ${cardData.selectedFrame || 'frame1'} ${cardData.shape || 'rectangle'}`}>
           <div className="card-header" style={{ backgroundColor: cardData.color || '#ff5722' }}>
             {cardData.logo && <img src={cardData.logo} alt="Logo" className="card-logo" />}
@@ -58,7 +64,7 @@ function SharedCardPage() {
             <div className="dashed-line"></div>
 
             <h1 className="new-card-title">
-              {`${cardData.prefix || ''} ${cardData.firstName || ''} ${cardData.lastName || ''} ${cardData.suffix || ''}`}
+              {`${cardData.prefix || ''} ${cardData.firstName || ''} ${cardData.lastName || ''} ${cardData.suffix || ''}`.trim()}
             </h1>
             <p className="new-card-title-extra">{cardData.title}</p>
             <p className="new-card-department" style={{ color: cardData.color }}>
@@ -70,6 +76,7 @@ function SharedCardPage() {
           <p className="new-card-headline">{cardData.headline}</p>
           <p className="new-card-preferredName">{cardData.preferredName}</p>
 
+          {/* Social Links */}
           <div className="social-links-container">
             {cardData.socialLinks && Object.entries(cardData.socialLinks).map(([platform, url]) => (
               url && (
@@ -87,9 +94,15 @@ function SharedCardPage() {
         </div>
 
         {/* Connect Button */}
-        <button className="connect-button" onClick={() => setShowModal(true)}>Connect</button>
+        <button 
+          className="connect-button" 
+          onClick={() => setShowModal(true)} 
+          disabled={isSubmitted}
+        >
+          {isSubmitted ? 'Connected' : 'Connect'}
+        </button>
 
-        {/* Modal */}
+        {/* Modal Form */}
         {showModal && (
           <div className="modal-overlay">
             <div className="modal-content">

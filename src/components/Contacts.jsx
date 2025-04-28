@@ -6,17 +6,16 @@ function Contacts() {
   const [searchTerm, setSearchTerm] = useState('');
   const [contacts, setContacts] = useState([]);
 
+  // Get current logged-in user's email
+  const currentUserEmail = localStorage.getItem('userEmail'); // ✅ Added this line
+
   // Fetch contacts from localStorage when the component is mounted
   useEffect(() => {
-    const currentUserEmail = localStorage.getItem('userEmail'); // 🔥 Get logged-in user's email
     if (currentUserEmail) {
       const storedContacts = JSON.parse(localStorage.getItem(`contactsData_${currentUserEmail}`)) || [];
       setContacts(storedContacts);
-    } else {
-      setContacts([]);
     }
-  }, []);
-  
+  }, [currentUserEmail]);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
