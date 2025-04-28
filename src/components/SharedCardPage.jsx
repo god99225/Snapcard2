@@ -27,22 +27,17 @@ function SharedCardPage() {
         logo: '/assets/contact1.png',
       };
   
-      // Get the logged-in user's ID from localStorage
-      const userId = localStorage.getItem('userId');
-      
-      if (!userId) {
-        alert("Please log in first.");
-        return;
-      }
+      // Fetch the creator's userId from the scanned QR code (cardData.userId)
+      const creatorUserId = cardData.userId;
   
-      // Retrieve the user's existing contacts using their UID
-      const existingContacts = JSON.parse(localStorage.getItem(userId)) || [];
+      // Get the existing contacts of the creator from localStorage
+      const existingContacts = JSON.parse(localStorage.getItem(`contactsData_${creatorUserId}`)) || [];
   
-      // Add the new contact to the user's list
+      // Add the new contact to the creator's contacts
       existingContacts.push(newContact);
-  
-      // Save the updated contacts list for that user
-      localStorage.setItem(userId, JSON.stringify(existingContacts));
+      
+      // Save the updated contacts list back to localStorage under the creator's userId
+      localStorage.setItem(`contactsData_${creatorUserId}`, JSON.stringify(existingContacts));
   
       // Inform user and close modal
       alert('Contact Added Successfully!');
