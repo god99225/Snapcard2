@@ -1,50 +1,55 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../style/ViewCard.css';
+import html2canvas from 'html2canvas';
 
 function SharedCardPage() {
-    const query = new URLSearchParams(useLocation().search);
-    const data = query.get('data');
-    const cardData = data ? JSON.parse(atob(data)) : null;
-  
-    const [showModal, setShowModal] = useState(false);
-    const [form, setForm] = useState({ name: '', number: '', email: '' });
-  
-    if (!cardData) return <div>Invalid or expired card link.</div>;
-  
-    const handleChange = (e) => {
-      setForm({ ...form, [e.target.name]: e.target.value });
+  const query = new URLSearchParams(useLocation().search);
+  const data = query.get('data');
+  const cardData = data ? JSON.parse(atob(data)) : null;
+
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState({ name: '', number: '', email: '' });
+
+  if (!cardData) return <div>Invalid or expired card link.</div>;
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newContact = {
+      name: form.name,
+      position: 'Connected via Card',
+      email: form.email,
+      number: form.number,
+      logo: '/assets/contact1.png',
     };
   
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      
-      const newContact = {
-        name: form.name,
-        position: 'Connected via Card',
-        email: form.email,
-        number: form.number,
-        logo: '/assets/contact1.png',
-      };
+    const existingContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
+    existingContacts.push(newContact);
+    localStorage.setItem('contactsData', JSON.stringify(existingContacts));
   
-      // Fetch the creator's userId from the scanned QR code (cardData.userId)
-      const creatorUserId = cardData.userId;
+    // Inform user and close modal
+    alert('Contact Added Successfully!');
+    setShowModal(false);
+    setForm({ name: '', number: '', email: '' });
+  };  
   
-      // Get the existing contacts of the creator from localStorage
-      const existingContacts = JSON.parse(localStorage.getItem(`contactsData_${creatorUserId}`)) || [];
+  const handleDownload = () => {
+    const cardElement = document.querySelector('.new-card-card');
+    if (!cardElement) return;
   
-      // Add the new contact to the creator's contacts
-      existingContacts.push(newContact);
-      
-      // Save the updated contacts list back to localStorage under the creator's userId
-      localStorage.setItem(`contactsData_${creatorUserId}`, JSON.stringify(existingContacts));
+    html2canvas(cardElement).then((canvas) => {
+      const link = document.createElement('a');
+      link.download = 'digital_card.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  };
   
-      // Inform user and close modal
-      alert('Contact Added Successfully!');
-      setShowModal(false);
-      setForm({ name: '', number: '', email: '' });
-    };
-    
+
   return (
     <div className="new-card-page-container">
       <div className="new-card-layout">
@@ -88,6 +93,9 @@ function SharedCardPage() {
 
         {/* Connect Button */}
         <button className="connect-button" onClick={() => setShowModal(true)}>Connect</button>
+
+        <button className="download-button" onClick={handleDownload}>Download</button>
+
         {/* Modal */}
         {showModal && (
           <div className="modal-overlay">
@@ -125,6 +133,7 @@ function SharedCardPage() {
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

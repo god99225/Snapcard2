@@ -84,6 +84,7 @@ END:VCARD
     alert('Card deleted successfully!');
     navigate('/home');
   };
+  
 
   const shareData = btoa(JSON.stringify(formData));
   const shareUrl = `${window.location.origin}/shared-card?data=${shareData}`;

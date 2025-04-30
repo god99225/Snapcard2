@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar'; // Import Sidebar
-import '../style/Contacts.css'; // Import the CSS
+import Sidebar from './Sidebar';
+import '../style/Contacts.css';
 
 function Contacts() {
-  const [searchTerm, setSearchTerm] = useState('');
   const [contacts, setContacts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Fetch contacts when the component mounts
   useEffect(() => {
-    const userId = localStorage.getItem('userId');
-    if (userId) {
-      // Retrieve the contacts for the logged-in user
-      const userContacts = JSON.parse(localStorage.getItem(userId)) || [];
-      setContacts(userContacts);
-    }
+    // Load contacts from localStorage
+    const savedContacts = JSON.parse(localStorage.getItem('contactsData')) || [];
+    
+    // You can also add your default contacts if needed
+    const defaultContacts = [
+      { name: 'Abhijit Mate', position: 'Software Engineer', email: 'john@example.com', logo: '/assets/contact1.png' },
+    ];
+
+    setContacts([...defaultContacts, ...savedContacts]);
   }, []);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  // Filter contacts based on search term
   const filteredContacts = contacts.filter((contact) =>
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
