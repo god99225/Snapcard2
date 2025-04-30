@@ -862,7 +862,8 @@
 
 
 .connect-button {
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
   padding: 10px 20px;
   background-color: #065db5;
   color: white;
@@ -870,6 +871,8 @@
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
+  align-items: center;
+  justify-content: center;
   transition: background-color 0.3s ease;
 }
 
@@ -878,7 +881,10 @@
 }
 
 .download-button {
-  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
   padding: 10px 20px;
   background-color: #4caf50;
   color: white;
