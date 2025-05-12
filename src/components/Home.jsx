@@ -114,7 +114,12 @@ function Home() {
             {sortedCards.length > 0 && (
               sortedCards.map((card, index) => (
                 <div key={index} className="card" onClick={() => handleCardClick(card)}>
-                  <div className="card-header" style={{ backgroundColor: card.color }}>
+                  <div className="card-header" style={{ 
+                    backgroundColor: card.colorType === 'solid' ? card.color : undefined,
+                    background: card.colorType === 'gradient' 
+                      ? `linear-gradient(135deg, ${card.gradientStart}, ${card.gradientEnd})`
+                      : undefined 
+                  }}>
                     {/* {card.logo && <img src={card.logo} alt="Logo" className="card-logo" />} */}
                   </div>
                   <h2>{card.firstName} {card.lastName}</h2>

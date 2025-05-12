@@ -19,6 +19,9 @@ function ViewCardPage() {
     company: '',
     headline: '',
     color: '#ff5722',
+    colorType: 'solid', // Add this line
+    gradientStart: '#ff5722',
+    gradientEnd: '#ff9800',
     logo: '',
     shape: 'rectangle',
     socialLinks: {},
@@ -30,10 +33,13 @@ function ViewCardPage() {
     const savedCard = JSON.parse(localStorage.getItem('selectedCard'));
     if (savedCard) {
       setCard(savedCard);
-      setFormData(savedCard);
-      setSelectedFrame(savedCard.selectedFrame); // Set the selected frame
+      setFormData({
+        ...savedCard,
+        colorType: savedCard.colorType || 'solid' // Ensure colorType exists
+      });
+      setSelectedFrame(savedCard.selectedFrame);
     } else {
-      navigate('/'); // Navigate to home if no card is found
+      navigate('/');
     }
   }, [navigate]);
 
@@ -95,7 +101,12 @@ END:VCARD
       <div className="new-card-layout">
         {/* card view */}
         <div className={`new-card-card ${selectedFrame} ${formData.shape}`}>
-          <div className="card-header" style={{ backgroundColor: formData.color }}>
+        <div className="card-header" style={{ 
+              backgroundColor: formData.colorType === 'solid' ? formData.color : undefined,
+              background: formData.colorType === 'gradient' 
+                ? `linear-gradient(135deg, ${formData.gradientStart}, ${formData.gradientEnd})`
+                : undefined 
+          }}>
             {formData.logo && <img src={formData.logo} alt="Logo" className="card-logo" />}
           </div>
 

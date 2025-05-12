@@ -11,6 +11,7 @@ const socialPlatforms = [
 function NewCardPage() {
   const [selectedSection, setSelectedSection] = useState('design');
   const [selectedFrame, setSelectedFrame] = useState('frame1'); // Frame selection state
+  const [colorType, setColorType] = useState('solid'); // Added for color type selection
   const [formData, setFormData] = useState({
     prefix: '',
     firstName: '',
@@ -22,6 +23,8 @@ function NewCardPage() {
     company: '',
     headline: '',
     color: '#ff5722',
+    gradientStart: '#ff5722', // Gradient start color
+    gradientEnd: '#ff9800', // Gradient end color
     logo: '',
     coverImage: '', // New field for cover image
     shape: 'rectangle',
@@ -43,6 +46,7 @@ function NewCardPage() {
     if (location.state && location.state.card) {
       setFormData(location.state.card);
       setSelectedFrame(location.state.card.selectedFrame || 'frame1'); // Set the selected frame
+      setColorType(location.state.card.colorType || 'solid'); // Restore color type
     }
   }, [location]);
 
@@ -70,11 +74,11 @@ function NewCardPage() {
       // Edit existing card
       const index = savedCards.findIndex(card => card.id === location.state.card.id);
       if (index !== -1) {
-        savedCards[index] = { ...formData, selectedFrame };
+        savedCards[index] = { ...formData, selectedFrame, colorType };
       }
     } else {
       // Add new card
-      savedCards.push({ ...formData, selectedFrame, id: Date.now() }); // Add a unique ID for the new card
+      savedCards.push({ ...formData, selectedFrame, colorType, id: Date.now() });
     }
     localStorage.setItem('cards', JSON.stringify(savedCards));
     navigate('/home');
@@ -108,6 +112,7 @@ function NewCardPage() {
     setSelectedFrame(frame);
   };
 
+  // Function to darken a color (used for solid or gradient colors)
   const getDarkerColor = (color) => {
     let colorInt = parseInt(color.slice(1), 16);
     let r = (colorInt >> 16) - 30;
@@ -118,7 +123,28 @@ function NewCardPage() {
     b = b < 0 ? 0 : b;
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   };
+
+  // Function to generate the gradient style
+  const getGradientColor = () => {
+    return `linear-gradient(135deg, ${formData.gradientStart}, ${formData.gradientEnd})`;
+  };
   
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+  
+  const setRandomGradient = () => {
+    const start = getRandomColor();
+    const end = getRandomColor();
+    setFormData({ ...formData, gradientStart: start, gradientEnd: end });
+  };
+  
+
   return (
     <div className="new-card-page">
       <Sidebar />
@@ -126,7 +152,13 @@ function NewCardPage() {
       <div className={`new-card-card ${selectedFrame} ${formData.shape}`}>
   
   
-  <div className="card-header" style={{ backgroundColor: formData.color }}>
+      <div
+        className="card-header"
+        style={{
+          backgroundColor: colorType === 'solid' ? formData.color : undefined,
+          background: colorType === 'gradient' ? getGradientColor() : undefined
+        }}
+          >
             {formData.logo && <img src={formData.logo} alt="Logo" className="card-logo" />}
             {/* Cover image if uploaded */}
             {formData.coverImage && (
@@ -231,6 +263,35 @@ function NewCardPage() {
                   value={formData.color}
                   onChange={(e) => setFormData({ ...formData, color: e.target.value })}
                 />
+                <div>
+                  <label>
+                    <input type="radio" name="colorType" value="solid" checked={colorType === 'solid'} onChange={() => setColorType('solid')} /> Solid Color
+                  </label>
+                  <br></br>
+                  <label>
+                    <input type="radio" name="colorType" value="gradient" checked={colorType === 'gradient'} onChange={() => setColorType('gradient')} /> Gradient Color
+                  </label>
+                </div>
+                {colorType === 'gradient' && (
+                  <div className="gradient-controls">
+                    <input
+                      type="color"
+                      value={formData.gradientStart}
+                      onChange={(e) =>
+                        setFormData({ ...formData, gradientStart: e.target.value })
+                      }
+                    />
+                    <input
+                      type="color"
+                      value={formData.gradientEnd}
+                      onChange={(e) =>
+                        setFormData({ ...formData, gradientEnd: e.target.value })
+                      }
+                    />
+                    <button onClick={setRandomGradient}>🎨 Random Gradient</button>
+                  </div>
+                )}
+
 
                 <h3>Upload Logo</h3>
                 <input type="file" accept="image/*" onChange={handleLogoChange} />
