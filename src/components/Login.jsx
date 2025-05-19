@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig';  // Ensure firebase.js is correctly configured
+import axios from 'axios';
 import '../style/Login.css';
 
 function Login() {
@@ -12,21 +11,58 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
-    // Basic validation
+
     if (!email || !password) {
       setError('Please enter both email and password.');
       return;
     }
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      localStorage.setItem('userToken', user.accessToken); // Store user token
-      localStorage.setItem('userEmail', user.email); // Store email
-      navigate('/home', { state: { email: user.email } });
+      // Step 1: Get Token
+      const authResponse = await axios.post('/api/Authentication/Authenticate', {
+        username: 'Admin',
+        password: '', // Replace with actual admin password or use .env
+      });
+
+      const token = authResponse.data.replace(/^"|"$/g, ''); // Remove quotes
+
+      // Step 2: Get all accounts using token
+      const accountsResponse = await axios.get('/api/odata/Accounts', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': '*/*',
+        }
+      });
+
+      const accounts = accountsResponse.data?.value || [];
+
+      // Step 3: Match user credentials
+      const matchedUser = accounts.find(
+        (account) =>
+          account.Email?.toLowerCase() === email.toLowerCase() &&
+          account.password === password
+      );
+
+      if (matchedUser) {
+        localStorage.setItem('userToken', token);
+        localStorage.setItem('userEmail', matchedUser.Email);
+        localStorage.setItem('userName', matchedUser.Name);
+        localStorage.setItem('userId', matchedUser.Oid || '');
+        localStorage.setItem('accountId', matchedUser.accountid || ''); // ✅ THIS IS CRITICAL
+
+        navigate('/home', {
+          state: { email: matchedUser.Email, name: matchedUser.Name }
+        });
+      }
+      else
+      {
+        setError('Invalid email or password.');
+      }
+
+
     } catch (err) {
-      setError('Invalid email or password. Please try again.');
+      console.error('Login error:', err);
+      setError('Login failed. Please check your credentials or try again later.');
     }
   };
 
@@ -34,10 +70,10 @@ function Login() {
     <div className="login-page">
       <div className="login-container">
         <div className="login-card">
-        <img 
+          <img 
             src="/assets/Snapcard logo.png" 
             alt="Snapcard Logo" 
-            style={{ width: "250px", height: "auto", display: "block", margin: "0 auto" }} 
+            style={{ width: "250px", margin: "0 auto" }} 
           />
           <h2>Login to your account</h2>
           <p>Don't have an account? <a href="/register">Register</a></p>
@@ -52,6 +88,7 @@ function Login() {
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
             <div className="input-group">
@@ -61,6 +98,7 @@ function Login() {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </div>
 

@@ -1,78 +1,109 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { encode as btoa } from 'js-base64';
+import axios from 'axios';
+import QRCode from 'react-qr-code';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload, faShareAlt, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import '../style/ViewCard.css';
-import QRCode from 'react-qr-code'; // Make sure to install react-qr-code package
 
 function ViewCardPage() {
   const [selectedSection, setSelectedSection] = useState('design');
-  const [selectedFrame, setSelectedFrame] = useState('frame1'); // Frame selection state
   const [formData, setFormData] = useState({
-    prefix: '',
     firstName: '',
     lastName: '',
-    suffix: '',
-    preferredName: '',
     title: '',
     department: '',
     company: '',
-    headline: '',
     color: '#ff5722',
-    colorType: 'solid', // Add this line
+    colorType: 'solid',
     gradientStart: '#ff5722',
     gradientEnd: '#ff9800',
-    logo: '',
-    shape: 'rectangle',
-    socialLinks: {},
+    logo: ''
   });
   const [card, setCard] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  const { cardId } = location.state || {};
+  const token = localStorage.getItem('userToken');
 
   useEffect(() => {
-    const savedCard = JSON.parse(localStorage.getItem('selectedCard'));
-    if (savedCard) {
-      setCard(savedCard);
-      setFormData({
-        ...savedCard,
-        colorType: savedCard.colorType || 'solid' // Ensure colorType exists
-      });
-      setSelectedFrame(savedCard.selectedFrame);
-    } else {
-      navigate('/');
+    if (!token) {
+      navigate('/login');
+      return;
     }
-  }, [navigate]);
 
-  if (!card) {
-    return <div>Loading...</div>;
-  }
+    if (!cardId) {
+      navigate('/home');
+      return;
+    }
 
-  const handleFrameChange = (frame) => {
-    setSelectedFrame(frame);
-  };
+    const fetchCardData = async () => {
+      try {
+        // Fetch card metadata
+        const cardResponse = await axios.get(`/api/odata/Cards(Oid=${cardId})`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json;odata.metadata=minimal'
+          }
+        });
+
+        // Fetch data info
+        const dataResponse = await axios.get(`/api/odata/DataInfos(Oid=${cardId})`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        const cardData = cardResponse.data;
+        const dataInfo = dataResponse.data;
+
+        setCard(cardData);
+        setFormData({
+          firstName: dataInfo.firstname || '',
+          lastName: dataInfo.Lastname || '',
+          title: dataInfo.Title || '',
+          department: dataInfo.Department || '',
+          company: dataInfo.Company || '',
+          color: cardData.color || '#ff5722',
+          colorType: cardData.colorType || 'solid',
+          gradientStart: cardData.gradientStart || '#ff5722',
+          gradientEnd: cardData.gradientEnd || '#ff9800',
+          logo: dataInfo.Logo || ''
+        });
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching card data:', error);
+        setError('Failed to load card data');
+        setLoading(false);
+        navigate('/home');
+      }
+    };
+
+    fetchCardData();
+  }, [cardId, token, navigate]);
 
   const handleEditClick = () => {
-    // Navigate to NewCardPage with card data
-    navigate('/new-card', { state: { card: formData, selectedFrame } });
+    navigate('/new-card', { 
+      state: { 
+        card: { ...formData, Oid: cardId },
+        isEditing: true 
+      }
+    });
   };
 
   const handleDownloadClick = () => {
-    // Generate VCF content
     const vcfData = `
-BEGIN:VCARD
-VERSION:3.0
-FN:${formData.firstName} ${formData.lastName}
-ORG:${formData.company}
-TITLE:${formData.title}
-EMAIL:${formData.email || ''}
-TEL:${formData.phone || ''}
-ADR:${formData.address || ''}
-URL:${formData.website || ''}
-NOTE:${formData.headline || ''}
-END:VCARD
+      BEGIN:VCARD
+      VERSION:3.0
+      FN:${formData.firstName} ${formData.lastName}
+      ORG:${formData.company}
+      TITLE:${formData.title}
+      END:VCARD
     `.trim();
 
-    // Create a blob and trigger download
     const blob = new Blob([vcfData], { type: 'text/vcard' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -82,39 +113,48 @@ END:VCARD
     URL.revokeObjectURL(url);
   };
 
-  const handleDeleteClick = () => {
-    // Remove card from localStorage
-    localStorage.removeItem('selectedCard');
-
-    // Redirect to home after deletion
-    alert('Card deleted successfully!');
-    navigate('/home');
+  const handleDeleteClick = async () => {
+    if (window.confirm('Are you sure you want to delete this card?')) {
+      try {
+        await axios.delete(`/api/odata/Cards(Oid=${cardId})`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        navigate('/home');
+      } catch (error) {
+        console.error('Error deleting card:', error);
+        alert('Failed to delete card');
+      }
+    }
   };
-  
 
-  const shareData = btoa(JSON.stringify(formData));
-  const shareUrl = `${window.location.origin}/shared-card?data=${shareData}`;
+  if (loading) {
+    return <div className="loading-container">Loading card data...</div>;
+  }
+
+  if (error) {
+    return <div className="error-container">{error}</div>;
+  }
 
   return (
     <div className="new-card-page-container">
       <Sidebar />
       <div className="new-card-layout">
-        {/* card view */}
-        <div className={`new-card-card ${selectedFrame} ${formData.shape}`}>
-        <div className="card-header" style={{ 
-              backgroundColor: formData.colorType === 'solid' ? formData.color : undefined,
-              background: formData.colorType === 'gradient' 
-                ? `linear-gradient(135deg, ${formData.gradientStart}, ${formData.gradientEnd})`
-                : undefined 
+        {/* Card Preview Section */}
+        <div className="new-card-card frame1 rectangle">
+          <div className="card-header" style={{ 
+            backgroundColor: formData.colorType === 'solid' ? formData.color : undefined,
+            background: formData.colorType === 'gradient' 
+              ? `linear-gradient(135deg, ${formData.gradientStart}, ${formData.gradientEnd})`
+              : undefined 
           }}>
             {formData.logo && <img src={formData.logo} alt="Logo" className="card-logo" />}
           </div>
 
           <div className="new-card-content">
-            <div className="dashed-line"></div>
-            
             <h1 className="new-card-title">
-              {`${formData.prefix} ${formData.firstName} ${formData.lastName} ${formData.suffix}`}
+              {`${formData.firstName} ${formData.lastName}`}
             </h1>
             <p className="new-card-title-extra">{formData.title}</p>
             <p className="new-card-department" style={{ color: formData.color }}>
@@ -122,34 +162,16 @@ END:VCARD
             </p>
             <p className="new-card-company">{formData.company}</p>
           </div>
-          <p className="new-card-headline">{formData.headline}</p>
-          <p className="new-card-preferredName">
-            {formData.preferredName}
-          </p>
-          <div className="social-links-container">
-            {Object.entries(formData.socialLinks).map(([platform, url]) => (
-              url && (
-                <div key={platform} className="social-link-item">
-                  <div className="social-icon-circle">
-                    <i className={`fab fa-${platform}`}></i>
-                  </div>
-                  <a href={url} target="_blank" rel="noopener noreferrer" className="social-link-url">
-                    {url}
-                  </a>
-                </div>
-              )
-            ))}
-          </div>
         </div>
 
+        {/* Card Actions and Details Section */}
         <div className="new-card-details-container">
-          {/* Tabs Section */}
           <div className="new-card-tabs">
             <button
               className={selectedSection === 'design' ? 'active' : ''}
               onClick={() => setSelectedSection('design')}
             >
-              Share
+              Analytics
             </button>
             <button
               className={selectedSection === 'info' ? 'active' : ''}
@@ -159,125 +181,56 @@ END:VCARD
             </button>
           </div>
 
-          {/* Download, Share, and Edit Section */}
           <div className="card-action-buttons">
             <button className="download-button" onClick={handleDownloadClick}>
-              <i className="fas fa-download"></i> Download
-            </button>
-            <button className="share-button">
-              <i className="fas fa-share-alt"></i> Share
+              <FontAwesomeIcon icon={faDownload} /> Download
             </button>
             <button className="edit-button" onClick={handleEditClick}>
-              <i className="fas fa-edit"></i> Edit
+              <FontAwesomeIcon icon={faEdit} /> Edit
             </button>
           </div>
 
-         <div className="new-card-section">
-         {selectedSection === 'design' && (
-          <div className="view-card-sections">
-            
-                {/* Section 1: Stats */}
-                <div className="oop">
-            <div className="section-one">
-              <div className="stats-box">
-                <h4>Total Views</h4>
-                <p>{card.totalViews || 0}</p>
-              </div>
-              <div className="stats-box">
-                <h4>Total Shares</h4>
-                <p>{card.totalShares || 0}</p>
-              </div>
-              <div className="stats-box">
-                <h4>Total Contacts</h4>
-                <p>{card.totalContacts || 0}</p>
-              </div>
+          <div className="new-card-section">
+            {selectedSection === 'design' && (
+              <div className="view-card-sections">
+                <div className="stats-container">
+                  <div className="stats-box">
+                    <h4>Total Views</h4>
+                    <p>{card?.totalview || 0}</p>
                   </div>
+                  <div className="stats-box">
+                    <h4>Total Saves</h4>
+                    <p>{card?.totalsaves || 0}</p>
                   </div>
+                </div>
 
-            {/* Section 2: QR Code */}
-            <div className="section-two">
-              <div className="qr-box">
-                <h4>Scan to Share</h4>
-                <QRCode value={shareUrl} size={160} />              </div>
-            </div>
-
-            {/* Section 3: Social Media Links */}
-            <div className="section-three">
-              <h4>Share on Social Media</h4>
-              <div className="share-links">
-                <a href={`https://facebook.com/sharer/sharer.php?u=${window.location.href}`} target="_blank" rel="noopener noreferrer">Facebook</a>
-                <a href={`https://twitter.com/intent/tweet?url=${window.location.href}`} target="_blank" rel="noopener noreferrer">Twitter</a>
-                <a href={`https://www.linkedin.com/shareArticle?url=${window.location.href}`} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <div className="qr-section">
+                  <h4>Share Card</h4>
+                  <QRCode value={window.location.href} size={128} />
+                  <p className="qr-instruction">Scan QR code to share</p>
+                </div>
               </div>
-            </div>
+            )}
 
-          </div>
-        )}
+            {selectedSection === 'info' && (
+              <div className="settings-section">
+                <div className="card-info">
+                  <h4>Card Details</h4>
+                  <p><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
+                  <p><strong>Company:</strong> {formData.company}</p>
+                  <p><strong>Title:</strong> {formData.title}</p>
+                  <p><strong>Department:</strong> {formData.department}</p>
+                </div>
 
-
-        {selectedSection === 'info' && (
-          <div className="info-options">
-
-            {/* Card Details Section */}
-            <div className="settings-section">
-              <h4>Card Details</h4>
-              <p><strong>Name: </strong>{formData.firstName} {formData.lastName}</p>
-              <p><strong>Company: </strong>{formData.company}</p>
-              <p><strong>Title: </strong>{formData.title}</p>
-            </div>
-
-            {/* Personalized Link Section */}
-            <div className="settings-section">
-              <h4>Personalized Link</h4>
-              <input
-                type="text"
-                value={formData.personalizedLink || `${window.location.href}/${formData.firstName}-${formData.lastName}`}
-                readOnly
-              />
-              <button
-                className="copy-button"
-                onClick={() => navigator.clipboard.writeText(`${window.location.href}/${formData.firstName}-${formData.lastName}`)}
-              >
-                Copy Link
-              </button>
-            </div>
-
-            {/* Pause/Unpause Card Section */}
-            <div className="settings-section">
-              <h4>Pause Card</h4>
-              <button className="pause-button" onClick={() => {/* Pause logic here */}}>
-                {card.paused ? 'Unpause Card' : 'Pause Card'}
-              </button>
-            </div>
-
-            {/* Delete Card Section */}
-            <div className="settings-section">
-              <h4>Delete Card</h4>
-              <p>Remove this card permanently from your project.</p>
-              <button className="delete-button" onClick={handleDeleteClick}>
-                Delete Card
-              </button>
-            </div>
-
-            {/* QR Code with Logo Section */}
-            <div className="settings-section">
-              <h4>QR Code with Logo</h4>
-              <div className="qr-code-with-logo">
-                <QRCode value={window.location.href} />
-                {formData.logo && (
-                  <img src={formData.logo} alt="Logo" className="qr-logo" />
-                )}
-              </div>
-            </div>
-
-          </div>
-        )}
-
-
-
-            {selectedSection === 'widget' && (
-              <div className="widget-options" style={{ display: 'none' }}>
-                <h3>Social Links</h3>
+                <div className="danger-zone">
+                  <h4>Danger Zone</h4>
+                  <button className="delete-button" onClick={handleDeleteClick}>
+                    <FontAwesomeIcon icon={faTrash} /> Delete Card
+                  </button>
+                  <p className="warning-text">
+                    Warning: This action cannot be undone. All card data will be permanently deleted.
+                  </p>
+                </div>
               </div>
             )}
           </div>

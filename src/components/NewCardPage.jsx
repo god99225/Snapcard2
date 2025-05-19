@@ -2,92 +2,169 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import '../style/NewCardPage.css';
+import axios from 'axios';
 
 const socialPlatforms = [
-  'facebook', 'twitter', 'linkedin', 'instagram', 'youtube', 'snapchat', 'pinterest', 'tiktok', 'reddit', 'tumblr', 
-  'whatsapp', 'telegram', 'discord', 'twitch', 'medium', 'github', 'behance', 'dribbble', 'flickr', 'vimeo'
+  'facebook', 'twitter', 'linkedin', 'instagram', 'youtube', 'snapchat', 'pinterest', 'tiktok',
+  'reddit', 'tumblr', 'whatsapp', 'telegram', 'discord', 'twitch', 'medium', 'github', 'behance',
+  'dribbble', 'flickr', 'vimeo'
 ];
 
 function NewCardPage() {
   const [selectedSection, setSelectedSection] = useState('design');
-  const [selectedFrame, setSelectedFrame] = useState('frame1'); // Frame selection state
-  const [colorType, setColorType] = useState('solid'); // Added for color type selection
+  const [selectedFrame, setSelectedFrame] = useState('frame1');
+  const [colorType, setColorType] = useState('solid');
   const [formData, setFormData] = useState({
-    prefix: '',
-    firstName: '',
-    lastName: '',
-    suffix: '',
-    preferredName: '',
-    title: '',
-    department: '',
-    company: '',
-    headline: '',
+    prefix: '', firstName: '', lastName: '', suffix: '', preferredName: '',
+    title: '', department: '', company: '', headline: '',
     color: '#ff5722',
-    gradientStart: '#ff5722', // Gradient start color
-    gradientEnd: '#ff9800', // Gradient end color
+    gradientStart: '#ff5722',
+    gradientEnd: '#ff9800',
     logo: '',
-    coverImage: '', // New field for cover image
+    coverImage: '',
     shape: 'rectangle',
-    socialLinks: {
-      facebook: '',
-      twitter: '',
-      linkedin: '',
-    },
+    socialLinks: socialPlatforms.reduce((links, platform) => ({
+      ...links,
+      [platform]: ''
+    }), {}),
   });
+
   const [showSocialDialog, setShowSocialDialog] = useState(false);
   const [currentPlatform, setCurrentPlatform] = useState('');
   const [currentUrl, setCurrentUrl] = useState('');
   const [error, setError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // Check if editing an existing card
-    if (location.state && location.state.card) {
-      setFormData(location.state.card);
-      setSelectedFrame(location.state.card.selectedFrame || 'frame1'); // Set the selected frame
-      setColorType(location.state.card.colorType || 'solid'); // Restore color type
+    let isMounted = true;
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      navigate('/login');
+      return;
     }
-  }, [location]);
+
+    if (location.state?.card) {
+      const existingSocialLinks = location.state.card.socialLinks || {};
+      const mergedSocialLinks = socialPlatforms.reduce((links, platform) => ({
+        ...links,
+        [platform]: existingSocialLinks[platform] || ''
+      }), {});
+
+      if (isMounted) {
+        setFormData({
+          ...location.state.card,
+          socialLinks: mergedSocialLinks
+        });
+        setSelectedFrame(location.state.card.selectedFrame || 'frame1');
+        setColorType(location.state.card.colorType || 'solid');
+      }
+    }
+
+    return () => { isMounted = false; };
+  }, [location, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleLogoChange = (e) => {
-    setFormData({ ...formData, logo: URL.createObjectURL(e.target.files[0]) });
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = () => setFormData({ ...formData, logo: reader.result });
+      reader.readAsDataURL(e.target.files[0]);
+    }
   };
 
-  // New function to handle cover image upload
   const handleCoverImageChange = (e) => {
-    setFormData({ ...formData, coverImage: URL.createObjectURL(e.target.files[0]) });
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = () => setFormData({ ...formData, coverImage: reader.result });
+      reader.readAsDataURL(e.target.files[0]);
+    }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+    setError('');
+
     if (!formData.firstName.trim() || !formData.lastName.trim()) {
       setError('First name and last name are required to save the card.');
+      setIsSaving(false);
       return;
     }
-    setError('');
-    const savedCards = JSON.parse(localStorage.getItem('cards')) || [];
-    if (location.state && location.state.card) {
-      // Edit existing card
-      const index = savedCards.findIndex(card => card.id === location.state.card.id);
-      if (index !== -1) {
-        savedCards[index] = { ...formData, selectedFrame, colorType };
-      }
-    } else {
-      // Add new card
-      savedCards.push({ ...formData, selectedFrame, colorType, id: Date.now() });
+
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      setError('Authentication token is missing.');
+      navigate('/login');
+      setIsSaving(false);
+      return;
     }
-    localStorage.setItem('cards', JSON.stringify(savedCards));
-    navigate('/home');
+
+  const requestBodyCardInfo = {
+      Oid: location.state?.card?.Oid || 0,
+      Photo: formData.coverImage,
+      Logo: formData.logo,
+      Displaydesign: selectedFrame,
+      Color: colorType === 'solid' 
+        ? formData.color 
+        : `${formData.gradientStart},${formData.gradientEnd}`,
+      firstname: formData.firstName,
+      middlename: '',
+      Lastname: formData.lastName,
+      prefix: formData.prefix,
+      sufix: formData.suffix,
+      Accreditations: '',
+      PreferredName: formData.preferredName,
+      MaidenName: '',
+      Pronouns: '',
+      Title: formData.title,
+      Department: formData.department,
+      Company: formData.company,
+      Headline: formData.headline
+    };
+
+    try {
+      const method = location.state?.card ? 'put' : 'post';
+      const url = location.state?.card 
+        ? `/api/odata/cardsinfo(${location.state.card.Oid})`
+        : '/api/odata/cardsinfo';
+
+      const response = await axios[method](url, requestBodyCardInfo, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!location.state?.card) {
+        await axios.post('/api/odata/Cards', {
+          Name: formData.firstName || 'Unnamed',
+          totalview: 0,
+          totalsaves: 0,
+          pausecard: false
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: '*/*',
+          }
+        });
+      }
+
+      navigate('/home');
+    } catch (error) {
+      console.error('Error saving card:', error);
+      setError(`Failed to save card: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-
-  const handleCancel = () => {
-    navigate('/home');
-  };
+  const handleCancel = () => navigate('/home');
 
   const handleShapeChange = (shape) => {
     setFormData({ ...formData, shape });
@@ -100,35 +177,41 @@ function NewCardPage() {
   };
 
   const handleSocialSave = () => {
+    if (!currentUrl.startsWith('http')) {
+      setError('Please enter a valid URL starting with http/https.');
+      return;
+    }
+    
     setFormData({
       ...formData,
-      socialLinks: { ...formData.socialLinks, [currentPlatform]: currentUrl },
+      socialLinks: {
+        ...formData.socialLinks,
+        [currentPlatform]: currentUrl
+      }
     });
     setShowSocialDialog(false);
+    setError('');
   };
-
 
   const handleFrameChange = (frame) => {
     setSelectedFrame(frame);
   };
 
-  // Function to darken a color (used for solid or gradient colors)
   const getDarkerColor = (color) => {
     let colorInt = parseInt(color.slice(1), 16);
     let r = (colorInt >> 16) - 30;
     let g = ((colorInt >> 8) & 0x00FF) - 30;
     let b = (colorInt & 0x0000FF) - 30;
-    r = r < 0 ? 0 : r;
-    g = g < 0 ? 0 : g;
-    b = b < 0 ? 0 : b;
+    r = Math.max(0, r);
+    g = Math.max(0, g);
+    b = Math.max(0, b);
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   };
 
-  // Function to generate the gradient style
   const getGradientColor = () => {
     return `linear-gradient(135deg, ${formData.gradientStart}, ${formData.gradientEnd})`;
   };
-  
+
   const getRandomColor = () => {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -137,7 +220,7 @@ function NewCardPage() {
     }
     return color;
   };
-  
+
   const setRandomGradient = () => {
     const start = getRandomColor();
     const end = getRandomColor();
@@ -331,14 +414,18 @@ function NewCardPage() {
               <h3>Social Links</h3>
               <div className="social-icons">
                 {socialPlatforms.map((platform) => (
-                  <button key={platform} className="social-icon-button" onClick={() => handleSocialIconClick(platform)}>
-                    <i className={`fab fa-${platform}`}></i> {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                  <button 
+                    key={platform} 
+                    className={`social-icon-button ${formData.socialLinks[platform] ? 'active' : ''}`}
+                    onClick={() => handleSocialIconClick(platform)}
+                  >
+                    <i className={`fab fa-${platform}`}></i>
+                    {platform.charAt(0).toUpperCase() + platform.slice(1)}
                   </button>
                 ))}
               </div>
             </div>
-            )}
-            
+          )}            
 
             {selectedSection === 'other' && (
               <div className="other-options">
@@ -370,8 +457,16 @@ function NewCardPage() {
 
 
           <div className="new-card-actions">
-            <button className="save-button" onClick={handleSave}>Save Card</button>
-            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+            <button 
+              className="save-button" 
+              onClick={handleSave}
+              disabled={isSaving}
+            >
+              {isSaving ? 'Saving...' : 'Save Card'}
+            </button>
+            <button className="cancel-button" onClick={handleCancel}>
+              Cancel
+            </button>
           </div>
         </div>
       </div>

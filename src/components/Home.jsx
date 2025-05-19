@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Sidebar from './Sidebar';
-import './NewCardPage';
 import '../style/Home.css';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPager, faSort } from '@fortawesome/free-solid-svg-icons'; // Import faPager and faSort icons
+import { faPager, faSort } from '@fortawesome/free-solid-svg-icons';
 
 function Home() {
   const navigate = useNavigate();
@@ -13,32 +13,49 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
 
-  useEffect(() => {
-    // Load saved cards from local storage
-    const savedCards = JSON.parse(localStorage.getItem('cards')) || [];
-    setCards(savedCards);
-  }, []);
+  const token = localStorage.getItem('userToken');
+
+useEffect(() => {
+    if (token) {
+      axios.get('/api/odata/Cards', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json;odata.metadata=minimal;odata.streaming=true',
+        },
+      })
+      .then(response => {
+        const fetchedCards = response.data.value || [];
+        setCards(fetchedCards);
+      })
+      .catch(error => {
+        console.error('Error fetching cards:', error);
+      });
+    } else {
+      navigate('/login');
+    }
+  }, [token, navigate]);
 
   const handleNewCardClick = () => {
     navigate('/new-card');
   };
 
   const handleCardClick = (card) => {
-    // Store the selected card in localStorage before navigating
-    localStorage.setItem('selectedCard', JSON.stringify(card));
-    navigate('/view-card', { state: { card } });
+    navigate('/view-card', { 
+      state: { 
+        cardId: card.Oid // Pass card ID instead of full card object
+      }
+    }); 
   };
 
   const filteredCards = cards.filter(card =>
-    card.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    card.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+    card.Name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedCards = filteredCards.sort((a, b) => {
     if (sortOrder === 'asc') {
-      return a.firstName.localeCompare(b.firstName);
+      return a.Name?.localeCompare(b.Name);
     }
-    return b.firstName.localeCompare(a.firstName);
+    return b.Name?.localeCompare(a.Name);
   });
 
   return (
@@ -122,7 +139,7 @@ function Home() {
                   }}>
                     {/* {card.logo && <img src={card.logo} alt="Logo" className="card-logo" />} */}
                   </div>
-                  <h2>{card.firstName} {card.lastName}</h2>
+                  <h2>{card.Name}</h2>
                   <ul>
                     <li><span className="li-content1"></span></li>
                     <li><span className="li-content1"></span></li>
