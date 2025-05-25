@@ -391,7 +391,7 @@
     .content-wrapper {
       margin-left: 0; /* No sidebar margin on small screens */
       padding: 20px;
-      width: 300%;
+      width: 500%;
     }
     .modal-content1 {
       padding: 10px;

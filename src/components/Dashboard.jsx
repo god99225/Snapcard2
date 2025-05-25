@@ -48,9 +48,6 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <div className="logo">
-          {/* You can place your logo here */}
-        </div>
         <div className="header-right">
           <div className="user-info">
             <button

@@ -1004,7 +1004,7 @@
     .new-card-layout {
       margin-left: 0; /* No sidebar margin on small screens */
       padding: 20px;
-      width: 300%;
+      width: 500%;
     }
   
     /* .account-settings-title {

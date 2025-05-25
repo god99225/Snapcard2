@@ -9,6 +9,9 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -19,21 +22,20 @@ function Login() {
 
     try {
       // Step 1: Get Token
-      const authResponse = await axios.post('/api/Authentication/Authenticate', {
-        username: 'Admin',
-        password: '', // Replace with actual admin password or use .env
-      });
+      const authResponse = await axios.post(`${API_BASE}/Authentication/Authenticate`, {
+  username: 'Admin',
+  password: '', // Secure this in production!
+});
 
       const token = authResponse.data.replace(/^"|"$/g, ''); // Remove quotes
 
       // Step 2: Get all accounts using token
-      const accountsResponse = await axios.get('/api/odata/Accounts', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': '*/*',
-        }
-      });
-
+const accountsResponse = await axios.get(`${API_BASE}/odata/Accounts`, {
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Accept': '*/*',
+  }
+});
       const accounts = accountsResponse.data?.value || [];
 
       // Step 3: Match user credentials

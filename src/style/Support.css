@@ -202,7 +202,7 @@ html, body {
 
   .contact-main-content {
     margin-left: 0; /* No sidebar margin on small screens */
-    width: 300%;
+    width: 500%;
     padding: 20px;
   }
 

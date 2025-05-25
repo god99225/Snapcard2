@@ -45,28 +45,11 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Default for mobile-first */
-.responsive-email-icon {
-  width: 24px;
-  height: 24px;
+.email-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px; /* Space between the icon and the email text */
 }
-
-/* Tablet and up */
-@media (min-width: 600px) {
-  .responsive-email-icon {
-    width: 30px;
-    height: 30px;
-  }
-}
-
-/* Desktop and up */
-@media (min-width: 1024px) {
-  .responsive-email-icon {
-    width: 36px;
-    height: 36px;
-  }
-}
-
 
 .user-email {
   color: #2c3e50;

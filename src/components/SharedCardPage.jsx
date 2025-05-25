@@ -31,7 +31,6 @@ function SharedCardPage() {
     existingContacts.push(newContact);
     localStorage.setItem('contactsData', JSON.stringify(existingContacts));
   
-    // Inform user and close modal
     alert('Contact Added Successfully!');
     setShowModal(false);
     setForm({ name: '', number: '', email: '' });
@@ -48,20 +47,22 @@ function SharedCardPage() {
       link.click();
     });
   };
-  
 
   return (
     <div className="new-card-page-container">
       <div className="new-card-layout">
-
         <div className={`new-card-card ${cardData.selectedFrame || 'frame1'} ${cardData.shape || 'rectangle'}`}>
-          <div className="card-header" style={{ backgroundColor: cardData.color || '#ff5722' }}>
+          <div className="card-header" style={{ 
+            backgroundColor: cardData.colorType === 'solid' ? cardData.color : undefined,
+            background: cardData.colorType === 'gradient' 
+              ? `linear-gradient(135deg, ${cardData.gradientStart}, ${cardData.gradientEnd})`
+              : undefined 
+          }}>
             {cardData.logo && <img src={cardData.logo} alt="Logo" className="card-logo" />}
           </div>
 
           <div className="new-card-content">
             <div className="dashed-line"></div>
-
             <h1 className="new-card-title">
               {`${cardData.prefix || ''} ${cardData.firstName || ''} ${cardData.lastName || ''} ${cardData.suffix || ''}`}
             </h1>
@@ -71,7 +72,6 @@ function SharedCardPage() {
             </p>
             <p className="new-card-company">{cardData.company}</p>
           </div>
-
           <p className="new-card-headline">{cardData.headline}</p>
           <p className="new-card-preferredName">{cardData.preferredName}</p>
 
@@ -83,7 +83,7 @@ function SharedCardPage() {
                     <i className={`fab fa-${platform}`}></i>
                   </div>
                   <a href={url} target="_blank" rel="noopener noreferrer" className="social-link-url">
-                    {url}
+                    {platform.charAt(0).toUpperCase() + platform.slice(1)}
                   </a>
                 </div>
               )
@@ -91,12 +91,11 @@ function SharedCardPage() {
           </div>
         </div>
 
-        {/* Connect Button */}
-        <button className="connect-button" onClick={() => setShowModal(true)}>Connect</button>
+        <div className="shared-card-actions">
+          <button className="connect-button" onClick={() => setShowModal(true)}>Connect</button>
+          <button className="download-button" onClick={handleDownload}>Download</button>
+        </div>
 
-        <button className="download-button" onClick={handleDownload}>Download</button>
-
-        {/* Modal */}
         {showModal && (
           <div className="modal-overlay">
             <div className="modal-content">
@@ -111,11 +110,12 @@ function SharedCardPage() {
                   required
                 />
                 <input
-                  type="text"
+                  type="tel"
                   name="number"
                   placeholder="Phone Number"
                   value={form.number}
                   onChange={handleChange}
+                  pattern="[0-9]{10}"
                 />
                 <input
                   type="email"
@@ -133,7 +133,6 @@ function SharedCardPage() {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

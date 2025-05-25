@@ -1,98 +1,98 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Sidebar from './Sidebar';
 import axios from 'axios';
-import QRCode from 'react-qr-code';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faShareAlt, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import Sidebar from './Sidebar';
+import { encode as btoa } from 'js-base64';
 import '../style/ViewCard.css';
+import QRCode from 'react-qr-code';
 
 function ViewCardPage() {
   const [selectedSection, setSelectedSection] = useState('design');
   const [formData, setFormData] = useState({
+    prefix: '',
     firstName: '',
     lastName: '',
+    suffix: '',
+    preferredName: '',
     title: '',
     department: '',
     company: '',
+    headline: '',
     color: '#ff5722',
-    colorType: 'solid',
-    gradientStart: '#ff5722',
-    gradientEnd: '#ff9800',
-    logo: ''
+    logo: '',
+    socialLinks: {},
   });
-  const [card, setCard] = useState(null);
+  const [cardStats, setCardStats] = useState({
+    totalViews: 0,
+    totalShares: 0,
+    totalContacts: 0,
+    paused: false,
+    personalizedLink: ''
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const { cardId } = location.state || {};
-  const token = localStorage.getItem('userToken');
 
   useEffect(() => {
-    if (!token) {
-      navigate('/login');
-      return;
-    }
-
-    if (!cardId) {
-      navigate('/home');
-      return;
-    }
-
     const fetchCardData = async () => {
+      const token = localStorage.getItem('userToken');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
       try {
-        // Fetch card metadata
-        const cardResponse = await axios.get(`/api/odata/Cards(Oid=${cardId})`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json;odata.metadata=minimal'
-          }
+        // Fetch card info using the CardInfo OID from Home component
+        const infoResponse = await axios.get(`/api/odata/cardsinfo(${cardId})`, {
+          headers: { Authorization: `Bearer ${token}` }
         });
 
-        // Fetch data info
-        const dataResponse = await axios.get(`/api/odata/DataInfos(Oid=${cardId})`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const cardInfo = infoResponse.data;
 
-        const cardData = cardResponse.data;
-        const dataInfo = dataResponse.data;
+        // Parse color data
+        const colorType = cardInfo.Color?.includes(',') ? 'gradient' : 'solid';
+        const [gradientStart, gradientEnd] = colorType === 'gradient' 
+          ? cardInfo.Color.split(',') 
+          : [cardInfo.Color, cardInfo.Color];
 
-        setCard(cardData);
+        // Set form data from cardinfo
         setFormData({
-          firstName: dataInfo.firstname || '',
-          lastName: dataInfo.Lastname || '',
-          title: dataInfo.Title || '',
-          department: dataInfo.Department || '',
-          company: dataInfo.Company || '',
-          color: cardData.color || '#ff5722',
-          colorType: cardData.colorType || 'solid',
-          gradientStart: cardData.gradientStart || '#ff5722',
-          gradientEnd: cardData.gradientEnd || '#ff9800',
-          logo: dataInfo.Logo || ''
+          prefix: cardInfo.prefix || '',
+          firstName: cardInfo.firstname || '',
+          lastName: cardInfo.Lastname || '',
+          suffix: cardInfo.sufix || '',
+          preferredName: cardInfo.PreferredName || '',
+          title: cardInfo.Title || '',
+          department: cardInfo.Department || '',
+          company: cardInfo.Company || '',
+          headline: cardInfo.Headline || '',
+          color: colorType === 'solid' ? cardInfo.Color : gradientStart,
+          logo: cardInfo.Logo || '',
+          socialLinks: cardInfo.SocialLinks ? JSON.parse(cardInfo.SocialLinks) : {},
         });
-        setLoading(false);
+
+        // Set dummy stats (replace with actual API call if needed)
+        setCardStats({
+          totalViews: cardInfo.totalviews || 0,
+          totalShares: cardInfo.totalsaves || 0,
+          totalContacts: cardInfo.totalcontacts || 0,
+          paused: cardInfo.pausecard || false,
+          personalizedLink: cardInfo.personalizedLink || ''
+        });
+
       } catch (error) {
         console.error('Error fetching card data:', error);
         setError('Failed to load card data');
-        setLoading(false);
         navigate('/home');
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchCardData();
-  }, [cardId, token, navigate]);
-
-  const handleEditClick = () => {
-    navigate('/new-card', { 
-      state: { 
-        card: { ...formData, Oid: cardId },
-        isEditing: true 
-      }
-    });
-  };
+    if (cardId) fetchCardData();
+  }, [cardId, navigate]);
 
   const handleDownloadClick = () => {
     const vcfData = `
@@ -101,6 +101,7 @@ function ViewCardPage() {
       FN:${formData.firstName} ${formData.lastName}
       ORG:${formData.company}
       TITLE:${formData.title}
+      NOTE:${formData.headline}
       END:VCARD
     `.trim();
 
@@ -113,48 +114,65 @@ function ViewCardPage() {
     URL.revokeObjectURL(url);
   };
 
-  const handleDeleteClick = async () => {
-    if (window.confirm('Are you sure you want to delete this card?')) {
-      try {
-        await axios.delete(`/api/odata/Cards(Oid=${cardId})`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        navigate('/home');
-      } catch (error) {
-        console.error('Error deleting card:', error);
-        alert('Failed to delete card');
+  const handleEditClick = () => {
+    navigate('/new-card', { 
+      state: { 
+        card: formData,
+        cardId: cardId
       }
+    });
+  };
+
+  const handleDeleteClick = async () => {
+    if (!window.confirm('Are you sure you want to delete this card?')) return;
+
+    try {
+      const token = localStorage.getItem('userToken');
+      await axios.delete(`/api/odata/cardsinfo(${cardId})`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert('Card deleted successfully!');
+      navigate('/home');
+    } catch (error) {
+      console.error('Error deleting card:', error);
+      alert('Failed to delete card.');
     }
   };
 
   if (loading) {
-    return <div className="loading-container">Loading card data...</div>;
+    return (
+      <div className="new-card-page-container">
+        <Sidebar />
+        <div className="loading-message">Loading card details...</div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="error-container">{error}</div>;
+    return (
+      <div className="new-card-page-container">
+        <Sidebar />
+        <div className="error-message">{error}</div>
+      </div>
+    );
   }
+
+  const shareData = btoa(JSON.stringify(formData));
+  const shareUrl = `${window.location.origin}/shared-card?data=${shareData}`;
 
   return (
     <div className="new-card-page-container">
       <Sidebar />
       <div className="new-card-layout">
-        {/* Card Preview Section */}
         <div className="new-card-card frame1 rectangle">
-          <div className="card-header" style={{ 
-            backgroundColor: formData.colorType === 'solid' ? formData.color : undefined,
-            background: formData.colorType === 'gradient' 
-              ? `linear-gradient(135deg, ${formData.gradientStart}, ${formData.gradientEnd})`
-              : undefined 
-          }}>
+          <div className="card-header" style={{ backgroundColor: formData.color }}>
             {formData.logo && <img src={formData.logo} alt="Logo" className="card-logo" />}
           </div>
 
           <div className="new-card-content">
+            <div className="dashed-line"></div>
             <h1 className="new-card-title">
-              {`${formData.firstName} ${formData.lastName}`}
+              {`${formData.prefix} ${formData.firstName} ${formData.lastName} ${formData.suffix}`}
             </h1>
             <p className="new-card-title-extra">{formData.title}</p>
             <p className="new-card-department" style={{ color: formData.color }}>
@@ -162,31 +180,27 @@ function ViewCardPage() {
             </p>
             <p className="new-card-company">{formData.company}</p>
           </div>
+          <p className="new-card-headline">{formData.headline}</p>
         </div>
 
-        {/* Card Actions and Details Section */}
         <div className="new-card-details-container">
           <div className="new-card-tabs">
-            <button
-              className={selectedSection === 'design' ? 'active' : ''}
-              onClick={() => setSelectedSection('design')}
-            >
-              Analytics
+            <button className={selectedSection === 'design' ? 'active' : ''}
+              onClick={() => setSelectedSection('design')}>
+              Share
             </button>
-            <button
-              className={selectedSection === 'info' ? 'active' : ''}
-              onClick={() => setSelectedSection('info')}
-            >
+            <button className={selectedSection === 'info' ? 'active' : ''}
+              onClick={() => setSelectedSection('info')}>
               Settings
             </button>
           </div>
 
           <div className="card-action-buttons">
             <button className="download-button" onClick={handleDownloadClick}>
-              <FontAwesomeIcon icon={faDownload} /> Download
+              <i className="fas fa-download"></i> Download
             </button>
             <button className="edit-button" onClick={handleEditClick}>
-              <FontAwesomeIcon icon={faEdit} /> Edit
+              <i className="fas fa-edit"></i> Edit
             </button>
           </div>
 
@@ -196,40 +210,58 @@ function ViewCardPage() {
                 <div className="stats-container">
                   <div className="stats-box">
                     <h4>Total Views</h4>
-                    <p>{card?.totalview || 0}</p>
+                    <p>{cardStats.totalViews}</p>
                   </div>
                   <div className="stats-box">
-                    <h4>Total Saves</h4>
-                    <p>{card?.totalsaves || 0}</p>
+                    <h4>Total Shares</h4>
+                    <p>{cardStats.totalShares}</p>
+                  </div>
+                  <div className="stats-box">
+                    <h4>Total Contacts</h4>
+                    <p>{cardStats.totalContacts}</p>
                   </div>
                 </div>
 
                 <div className="qr-section">
-                  <h4>Share Card</h4>
-                  <QRCode value={window.location.href} size={128} />
-                  <p className="qr-instruction">Scan QR code to share</p>
+                  <h4>Scan to Share</h4>
+                  <QRCode value={shareUrl} size={160} />
+                </div>
+
+                <div className="social-share-section">
+                  <h4>Share on Social Media</h4>
+                  <div className="social-share-buttons">
+                    <a href={`https://facebook.com/sharer/sharer.php?u=${shareUrl}`} 
+                      target="_blank" rel="noopener noreferrer">
+                      <i className="fab fa-facebook"></i>
+                    </a>
+                    <a href={`https://twitter.com/intent/tweet?url=${shareUrl}`} 
+                      target="_blank" rel="noopener noreferrer">
+                      <i className="fab fa-twitter"></i>
+                    </a>
+                    <a href={`https://www.linkedin.com/shareArticle?url=${shareUrl}`} 
+                      target="_blank" rel="noopener noreferrer">
+                      <i className="fab fa-linkedin"></i>
+                    </a>
+                  </div>
                 </div>
               </div>
             )}
 
             {selectedSection === 'info' && (
-              <div className="settings-section">
-                <div className="card-info">
+              <div className="settings-sections">
+                <div className="settings-section">
                   <h4>Card Details</h4>
                   <p><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
                   <p><strong>Company:</strong> {formData.company}</p>
                   <p><strong>Title:</strong> {formData.title}</p>
-                  <p><strong>Department:</strong> {formData.department}</p>
                 </div>
 
-                <div className="danger-zone">
-                  <h4>Danger Zone</h4>
+                <div className="settings-section danger-zone">
+                  <h4>Delete Card</h4>
+                  <p>Permanently remove this card from your account.</p>
                   <button className="delete-button" onClick={handleDeleteClick}>
-                    <FontAwesomeIcon icon={faTrash} /> Delete Card
+                    Delete Card
                   </button>
-                  <p className="warning-text">
-                    Warning: This action cannot be undone. All card data will be permanently deleted.
-                  </p>
                 </div>
               </div>
             )}

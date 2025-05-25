@@ -14,21 +14,33 @@ function Home() {
   const [sortOrder, setSortOrder] = useState('asc');
 
   const token = localStorage.getItem('userToken');
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/json;odata.metadata=minimal;odata.streaming=true',
+  };
 
-useEffect(() => {
+  useEffect(() => {
     if (token) {
-      axios.get('/api/odata/Cards', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json;odata.metadata=minimal;odata.streaming=true',
-        },
-      })
-      .then(response => {
-        const fetchedCards = response.data.value || [];
-        setCards(fetchedCards);
+      Promise.all([
+        axios.get('/api/odata/Cards', { headers }),
+        axios.get('/api/odata/cardsinfo', { headers })
+      ])
+      .then(([cardsRes, infoRes]) => {
+        const fetchedCards = cardsRes.data.value || [];
+        const cardInfos = infoRes.data.value || [];
+
+        // Merge cards with their corresponding info
+        const mergedCards = fetchedCards.map(card => ({
+          ...card,
+          info: cardInfos.find(info => 
+            card.Name?.toLowerCase() === info.firstname?.toLowerCase()
+          )
+        }));
+
+        setCards(mergedCards);
       })
       .catch(error => {
-        console.error('Error fetching cards:', error);
+        console.error('Error fetching data:', error);
       });
     } else {
       navigate('/login');
@@ -42,7 +54,7 @@ useEffect(() => {
   const handleCardClick = (card) => {
     navigate('/view-card', { 
       state: { 
-        cardId: card.Oid // Pass card ID instead of full card object
+        cardId: card.info?.Oid // Use CardInfo OID for viewing
       }
     }); 
   };
@@ -57,6 +69,7 @@ useEffect(() => {
     }
     return b.Name?.localeCompare(a.Name);
   });
+
 
   return (
     <div className="home-container">
